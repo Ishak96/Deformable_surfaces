@@ -1,1 +1,14 @@
-# surfaces_deformoables
+# Surfaces déformables Globalement (Super-Quadriques)
+
+## université de cergy pontoise
+## ETIS
+### AYAD Ishak
+### Tuteur du projet : Brahim DERDOURI
+
+Projet de laboratoire M1 IISC
+
+### Domaine : Synthèse d’images
+
+#### Pré-Requis :
+1. Langage C
+2. OpenGL
