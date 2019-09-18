@@ -1,8 +1,8 @@
 # Surfaces déformables Globalement (Super-Quadriques)
 
 ## université de cergy pontoise
-## ETIS
-### AYAD Ishak
+## Laboratoire : ETIS
+### Éyudiant : AYAD Ishak
 ### Tuteur du projet : Brahim DERDOURI
 
 Projet de laboratoire M1 IISC
