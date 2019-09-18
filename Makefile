@@ -28,7 +28,9 @@ LFLAGS=-lm
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	$(CC) $^ $(LFLAGS) -o $@
 
-# make obj files
+# make obj files	$(CC) $^ $(LFLAGS) -o $@	$(CC) $^ $(LFLAGS) -o $@
+
+
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
