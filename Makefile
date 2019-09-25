@@ -11,7 +11,7 @@ TESTDIR=tests
 OBJDIR=obj
 DOXCONF=docsgen.conf
 
-CFLAGS=-Wall -g -I$(INCDIR)
+CFLAGS=-Wall -g -I$(INCDIR) -I/usr/X11R6/include -L/usr/lib -L/usr/X11R6/lib
 
 # getting source files and obj names
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
@@ -22,7 +22,7 @@ TESTBINS := $(TESTS:$(TESTDIR)/%.c=$(BINDIR)/%)
 TESTOBJ  := $(TESTS:$(TESTDIR)/%.c=$(OBJDIR)/%.o)
 
 # flags to be used
-LFLAGS=-lm
+LFLAGS=-lm -lGL -lGLU -lglut  -LGL -lX11 -lX11 
 
 # make main executable
 $(BINDIR)/$(TARGET): $(OBJECTS)
