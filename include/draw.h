@@ -11,7 +11,7 @@
 #define G 1.0
 #define B 1.0
 
-void draw_superquadrics(summit** sum, int m, int n);
-void DrawEllipsoid(unsigned int uiStacks, unsigned int uiSlices, float fA, float fB, float fC, float e1, float e2);
+void draw_superquadrics(summit** sum, double m, double n);
+void DrawEllipsoid(unsigned int uiStacks, unsigned int uiSlices, double fA, double fB, double fC, double e1, double e2);
 
 #endif

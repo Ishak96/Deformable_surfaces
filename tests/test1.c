@@ -1,19 +1,20 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include <math.h>
 
 #include<superquadrics.h>
 
 int main(int argc, char** argv) {
 
-	int m = 1000;
-	int n = 1000;
-	float a = 4;
-	float b = 2;
-	float c = 1;
-	float p = 1;
-	float q = 1;
+	double m = 10;
+	double n = 10;
+	double a = 2;
+	double b = 2;
+	double c = 2;
+	double p = 0;
+	double q = 0;
 	
-	float** values = discretization(-PI / 2, PI / 2, -PI, PI, m, n);
+	double** values = discretization(-PI / 2, PI / 2, -PI, PI, m, n);
 
 	for(int i = 0; i <= m; i++){
 		printf("%f || ", values[0][i]);
@@ -33,6 +34,23 @@ int main(int argc, char** argv) {
 			printf("for{phi = %f, theta = %f} => {x = %f, y = %f, z = % f}\n", values[0][i], values[1][j], sum[i][j].x, sum[i][j].y, sum[i][j].z);
 		}
 	}
+
+	double phi = -1.570796;
+	double theta = -2.513274;
+	double e1 = 2;
+	double e2 = 2;
+	double x, ret;
+
+	x = 60.0;
+	ret = cos( x*VAL );
+
+	printf("abs(phi) = %f\n", abs_(phi));
+	printf("cos(phi) = %f\n", cos(phi*VAL));
+	printf("(pow(cos(phi), e1)) = %f\n", pow(cos(phi*VAL), e1));
+	printf("(pow(cos(theta), e2)) = %f\n", pow(cos(theta*VAL), e2));
+	printf("a * (pow(cos(phi), e1)) * (pow(cos(theta), e2)) = %f\n", a * (pow(cos(phi*VAL), e1)) * (pow(cos(theta*VAL), e2)));
+
+	printf("The cosine of %lf is %lf degrees\n", x, ret);
 
 	return 0;
 }

@@ -3,10 +3,12 @@
 
 
 //global variables
-int m_t = 1000;
-int n_t = 1000;
-float a_t,b_t,c_t,p_t,q_t;
+double m_t = 30.f;
+double n_t = 30.f;
+double a_t,b_t,c_t,p_t,q_t;
 summit** sum_t;
+
+GLfloat angle = 90;
 
 void init(void){
 	glClearColor(0, 0, 0, 0);
@@ -32,20 +34,27 @@ void display(void){
 
 	glColor3d(1,0,0);
 
-	glPushMatrix();
 	glLoadIdentity();
 	glScalef(2.0, 2.0, 2.0);
-
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glColor4f(0.0, 0.0, 0.75, 0.5);
 	glLineWidth(2.0);
+	glRotatef(angle, 1.0, 0.0, 0.0);
+	
+	glPushMatrix();
 
-	float** values = discretization(-PI / 2, PI / 2, -PI, PI, m_t, n_t);
+	double** values = discretization(-PI, PI, -PI, PI, m_t, n_t);
 	sum_t = summit_building(a_t, b_t, c_t, p_t, q_t, m_t, n_t, values);
 	draw_superquadrics(sum_t, m_t, n_t);
 
 	glPopMatrix();
 	glutSwapBuffers();
+}
+
+void keyboard(unsigned char key, int a, int b){
+    switch (key){
+    	case 'l':angle+=10.f;glutPostRedisplay();break;
+    }
 }
 
 int main(int argc, char** argv){
@@ -71,7 +80,8 @@ int main(int argc, char** argv){
 	init();
 
 	glutDisplayFunc(display);
-	glutReshapeFunc(reshape);	
+	glutReshapeFunc(reshape);
+	glutKeyboardFunc(keyboard);
 	glutMainLoop();
 	return 0;
 }

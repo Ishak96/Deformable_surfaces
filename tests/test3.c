@@ -3,7 +3,9 @@
 
 
 //global variables
-float a_t,b_t,c_t,e1_t,e2_t;
+double a_t,b_t,c_t,e1_t,e2_t;
+
+GLfloat angle = 90;
 
 void init(void){
 	glClearColor(0, 0, 0, 0);
@@ -32,15 +34,22 @@ void display(void){
 	glPushMatrix();
 	glLoadIdentity();
 	glScalef(2.0, 2.0, 2.0);
+	glRotatef(angle, 1.0, 0.0, 0.0);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glColor4f(0.0, 0.0, 0.75, 0.5);
 	glLineWidth(2.0);
 
-	DrawEllipsoid(10, 10, a_t, b_t, c_t, e1_t, e2_t);
+	DrawEllipsoid(20, 20, a_t, b_t, c_t, e1_t, e2_t);
 
 	glPopMatrix();
 	glutSwapBuffers();
+}
+
+void keyboard(unsigned char key, int a, int b){
+    switch (key){
+    	case 'l':angle+=10.f;glutPostRedisplay();break;
+    }
 }
 
 int main(int argc, char** argv){
@@ -66,7 +75,8 @@ int main(int argc, char** argv){
 	init();
 
 	glutDisplayFunc(display);
-	glutReshapeFunc(reshape);	
+	glutReshapeFunc(reshape);
+	glutKeyboardFunc(keyboard);
 	glutMainLoop();
 	return 0;
 }
