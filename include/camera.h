@@ -5,10 +5,10 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 
-void idle();
-void specialKeyboard(int key, int x, int y);
-void mouse(int button, int state, int x, int y);
-void mouseMotion(int x, int y);
-void keyboard(unsigned char key, int x, int y);
+void camera_idle();
+void camera_specialKeyboard(int key, int x, int y);
+void camera_mouse(int button, int state, int x, int y);
+void camera_mouseMotion(int x, int y);
+void camera_keyboard(unsigned char key, int x, int y);
 
 #endif

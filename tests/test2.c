@@ -6,8 +6,8 @@ extern float xrot, yrot;
 extern float zoom_x, zoom_y;
 
 //global variables
-double m_t = 30.f;
-double n_t = 30.f;
+double m_t = 25.f;
+double n_t = 25.f;
 double a_t,b_t,c_t,p_t,q_t;
 summit** sum_t;
 
@@ -78,11 +78,11 @@ int main(int argc, char** argv){
 
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
-	glutSpecialFunc(specialKeyboard);
-	glutMouseFunc(mouse);
-	glutMotionFunc(mouseMotion);
-	glutKeyboardFunc(keyboard);
-	//glutIdleFunc(idle);
+	glutSpecialFunc(camera_specialKeyboard);
+	glutMouseFunc(camera_mouse);
+	glutMotionFunc(camera_mouseMotion);
+	glutKeyboardFunc(camera_keyboard);
+	//glutIdleFunc(camera_idle);
 
 	glutMainLoop();
 	return 0;

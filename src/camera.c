@@ -13,7 +13,7 @@ float ydiff = 0.0f;
 float zoom_x = 0.0;
 float zoom_y = 0.0;
 
-void idle(){
+void camera_idle(){
 	if (!mouseDown){
 		xrot += 0.3f;
 		yrot += 0.4f;
@@ -21,7 +21,7 @@ void idle(){
 	glutPostRedisplay();
 }
 
-void specialKeyboard(int key, int x, int y){
+void camera_specialKeyboard(int key, int x, int y){
 	if (key == GLUT_KEY_F1){
 		fullscreen = !fullscreen;
 
@@ -34,7 +34,7 @@ void specialKeyboard(int key, int x, int y){
 	}
 }
 
-void mouse(int button, int state, int x, int y){
+void camera_mouse(int button, int state, int x, int y){
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
 		mouseDown = 1;
 		xdiff = x - yrot;
@@ -45,7 +45,7 @@ void mouse(int button, int state, int x, int y){
 	}
 }
 
-void mouseMotion(int x, int y){
+void camera_mouseMotion(int x, int y){
 	if (mouseDown){
 		yrot = x - xdiff;
 		xrot = y + ydiff;
@@ -54,19 +54,19 @@ void mouseMotion(int x, int y){
 	}
 }
 
-void keyboard(unsigned char key, int x, int y){
+void camera_keyboard(unsigned char key, int x, int y){
 	switch (key){
 		case 'd':
-			zoom_x = zoom_x + 1.0; 
+			zoom_x = zoom_x + .5; 
 			break; 
 		case 'q':
-			zoom_x = zoom_x - 1.0; 
+			zoom_x = zoom_x - .5; 
 			break;
 		case 'z':
-			zoom_y = zoom_y + 1.0; 
+			zoom_y = zoom_y + .5; 
 			break;
 		case 's':
-			zoom_y = zoom_y - 1.0; 
+			zoom_y = zoom_y - .5; 
 			break;
 	};
 	glutPostRedisplay();
