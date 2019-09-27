@@ -46,12 +46,6 @@ void display(void){
 	glutSwapBuffers();
 }
 
-void keyboard(unsigned char key, int a, int b){
-    switch (key){
-    	case 'l':angle+=10.f;glutPostRedisplay();break;
-    }
-}
-
 int main(int argc, char** argv){
 
 	if(argc < 5){
@@ -76,7 +70,6 @@ int main(int argc, char** argv){
 
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
-	glutKeyboardFunc(keyboard);
 	glutMainLoop();
 	return 0;
 }

@@ -7,8 +7,8 @@
 #include <GL/glut.h>
 #include <math.h>
 
-#define R 1.0
-#define G 1.0
+#define R 0.60
+#define G 0.75
 #define B 1.0
 
 void draw_superquadrics(summit** sum, double m, double n);
