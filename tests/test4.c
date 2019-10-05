@@ -6,12 +6,13 @@
 extern float xrot, yrot;
 extern float zoom_x, zoom_y;
 
-//global variables
-double a_t,b_t,c_t,e1_t,e2_t;
+//variables globales
+float color[3];
+char* file_name;
 float** cloud;
-int size = 0;
-
-GLfloat angle = 90;
+int size;
+float fact;
+int done = 0;
 
 void init(void){
 	glClearColor(0, 0, 0, 0);
@@ -48,11 +49,15 @@ void display(void){
 
 	glPushMatrix();
 
-	if(size == 0)
-		cloud = generate_cloud_point(20, 20, a_t, b_t, c_t, e1_t, e2_t, &size);
-	
-	float color[3] = {1.0, 1.0, 1.0};
-	draw_cloud_point(cloud, size, color);
+	if(!done){
+		cloud = get_cloud_point(file_name, &size, fact);
+		done = 1;
+	}
+
+	if(size < 0)
+		fprintf(stderr, "display: couldn't get cloud!\n");
+	else
+		draw_cloud_point(cloud, size, color);
 
 	glPopMatrix();
 	glFlush();
@@ -61,23 +66,23 @@ void display(void){
 
 int main(int argc, char** argv){
 
-	if(argc < 5){
+	if(argc < 6){
 		fprintf(stderr, "main: invalid argument!\n");
-		printf("usage: %s [a] [b] [c] [e1] [e2]..\n", argv[0]);
+		printf("usage: %s [file] [R] [G] [B] [fact]..\n", argv[0]);
 		return -1;
 	}
 
-	a_t = atof(argv[1]);
-	b_t = atof(argv[2]);
-	c_t = atof(argv[3]);
-	e1_t = atof(argv[4]);
-	e2_t = atof(argv[5]);
+	file_name = argv[1];
+	color[0] = atof(argv[2]);
+	color[1] = atof(argv[3]);
+	color[2] = atof(argv[4]);
+	fact = atof(argv[5]);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(800, 800);
-	glutInitWindowPosition(400, 35);
-	glutCreateWindow("superquadrics modelization");
+	glutInitWindowPosition(50, 50);
+	glutCreateWindow("cloud points");
 
 	init();
 
@@ -87,6 +92,7 @@ int main(int argc, char** argv){
 	glutMouseFunc(camera_mouse);
 	glutMotionFunc(camera_mouseMotion);
 	glutKeyboardFunc(camera_keyboard);
+	//glutIdleFunc(camera_idle);
 
 	glutMainLoop();
 	return 0;

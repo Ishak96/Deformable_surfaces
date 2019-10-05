@@ -36,3 +36,38 @@ void DrawEllipsoid(unsigned int uiStacks, unsigned int uiSlices, double fA, doub
 		glEnd();
 	}
 }
+
+void DrawEllipsoid_cloud(unsigned int uiStacks, unsigned int uiSlices, double fA, double fB, double fC, double e1, double e2){
+	double tStep = (PI) / (double)uiSlices;
+	double sStep = (PI) / (double)uiStacks;
+	
+	glColor3f(R, G, B);
+	glPointSize(2);
+	glBegin(GL_POINTS);
+	for(double t = -PI; t <= (PI)+.0001; t += tStep)
+	{
+		for(double s = -PI; s <= PI+.0001; s += sStep)
+		{
+			glVertex3f(fA * fexp(cos(t), e1) * fexp(cos(s), e2), fB * fexp(cos(t), e1) * fexp(sin(s), e2), fC * fexp(sin(t), e1));
+			glVertex3f(fA * fexp(cos(t+tStep), e1) * fexp(cos(s), e2), fB * fexp(cos(t+tStep), e1) * fexp(sin(s), e2), fC * fexp(sin(t+tStep), e1));
+		}
+	}
+	glEnd();
+}
+
+void draw_cloud_point(float** cloud, int size, float* color){
+
+	if( cloud == NULL || color == NULL ){
+		fprintf(stderr, "draw_cloud_point: invalid argument!\n");
+	}
+
+	glColor3f(color[0], color[1], color[2]);	
+	glPointSize(POINTS_SIZE);
+	glBegin(GL_POINTS);
+	
+	for(int i = 0; i <= size; i++){
+		glVertex3f(cloud[i][0], cloud[i][1], cloud[i][2]);
+	}
+	
+	glEnd();
+}
