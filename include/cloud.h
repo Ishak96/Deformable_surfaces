@@ -14,6 +14,7 @@ float** generate_cloud_point(unsigned int uiStacks, unsigned int uiSlices, doubl
 void igenvalues(float M[3][3], float R[3][3], float* lambda1, float* lambda2, float* lambda3);
 int calculate_matrix_of_rotation(float M[3][3], float R[3][3], float* lambda1, float* lambda2, float* lambda3);
 int calculate_matrix_of_initial_moments(float** cloud, int size, float tx, float ty, float tz, float matrix[3][3]);
+float* get_size_parameters(float** cloud, int size, float tx, float ty, float tz);
 float* initial_parameters(float** cloud, int size);
 
 #endif

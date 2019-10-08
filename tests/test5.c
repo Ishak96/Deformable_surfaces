@@ -24,5 +24,9 @@ int main(int argc, char** argv) {
 	printf("angle1 = %f, angle2 = %f, angle3 = %f\n", init_param[5], init_param[6], init_param[7]);
 	printf("a = %f, b = %f, c = %f\n", init_param[8], init_param[9], init_param[10]);
 
+	float* init_size = get_size_parameters(cloud, size, init_param[2], init_param[3], init_param[4]);
+	printf("-------------------------------------------------\n");
+	printf("a = %f, b = %f, c = %f\n", init_size[0], init_size[1], init_size[2]);
+	
 	return 0;
 }

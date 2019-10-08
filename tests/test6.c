@@ -58,9 +58,8 @@ void display(void){
 	if(size == 0)
 		cloud = generate_cloud_point(70, 70, a_t, b_t, c_t, e1_t, e2_t, &size);
 	
-	float color[3] = {1.0, 1.0, 1.0};
-	if(aff == 1)
-		draw_cloud_point(cloud, size, color);
+	float color[3] = {1.0, 0.0, 0.0};
+	draw_cloud_point(cloud, size, color);
 
 	if(!initial){
 		float* initial_values = initial_parameters(cloud, size);
@@ -92,9 +91,9 @@ void display(void){
 			initial = 1;
 		}
 	}
-	else{
-		draw_superquadrics(sum_t, m_t, n_t);
-	}
+	else
+		if(aff == 1)
+			draw_superquadrics(sum_t, m_t, n_t);
 
 
 	glPopMatrix();

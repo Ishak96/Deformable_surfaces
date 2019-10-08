@@ -122,9 +122,9 @@ int center_of_gravity(float** cloud, int size, float* tx, float* ty, float* tz){
  		(*ty) += cloud[i][2];
  	}
 
-  	(*tx) /= size;
- 	(*ty) /= size;
- 	(*ty) /= size;	
+  	(*tx) /= (float)size;
+ 	(*ty) /= (float)size;
+ 	(*ty) /= (float)size;	
 
  	return 0;
 }
@@ -197,7 +197,7 @@ void igenvalues(float M[3][3], float R[3][3], float* lambda1, float* lambda2, fl
 			for(j = 0; j < 3; j++){
 				temp[i][j] = 0;
 
-				for(p = 0;p < 3;p++){
+				for(p = 0;p < 3; p++){
 					temp[i][j] += s1t[i][p] * d[p][j];
 				}
 			}
@@ -294,9 +294,29 @@ int calculate_matrix_of_initial_moments(float** cloud, int size, float tx, float
 
  	for(int i = 0; i < 3; i ++)
  		for(int j = 0; j < 3; j++)
- 			matrix[i][j] /= size;
+ 			matrix[i][j] /= (float)size;
 
  	return 0;
+}
+
+float* get_size_parameters(float** cloud, int size, float tx, float ty, float tz){
+	 float* init_size = malloc(sizeof(float) * 3);
+	 float max_x, max_y, max_z = -1000000000.0f;
+
+	 for(int i = 0; i <= size; i++){
+	 	if(cloud[i][0] > max_x)
+	 		max_x = cloud[i][0];
+	 	if(cloud[i][1] > max_y)
+	 		max_y = cloud[i][1];
+	 	if(cloud[i][2] > max_z)
+	 		max_z = cloud[i][2];
+	 }
+
+	 init_size[0] = (tx > max_x) ? (tx - max_x) : (max_x - tx);
+	 init_size[1] = (ty > max_y) ? (ty - max_y) : (max_y - ty);
+	 init_size[2] = (tz > max_z) ? (tz - max_z) : (max_z - tz);
+
+	 return init_size;
 }
 
 float* initial_parameters(float** cloud, int size){
@@ -333,9 +353,13 @@ float* initial_parameters(float** cloud, int size){
  	init_param[6] = atan2(-R[1][2] / cos(init_param[5]), -R[2][2] / cos(init_param[5]));
  	init_param[7] = atan2(-R[0][1] / cos(init_param[6]), -R[0][0] / cos(init_param[6]));
 
- 	init_param[8] = sqrt((3 / 2) * (lambda2 + lambda3 - lambda1));
- 	init_param[9] = sqrt((3 / 2) * (lambda1 + lambda3 - lambda2));
- 	init_param[10] = sqrt((3 / 2) * (lambda1 + lambda2 - lambda3));
+ 	float* init_size = get_size_parameters(cloud, size, init_param[2], init_param[3], init_param[4]);
+
+ 	init_param[8] = init_size[0];
+ 	init_param[9] = init_size[1];
+ 	init_param[10] = init_size[2];
+
+ 	free(init_size);
 
  	return init_param;
  }
