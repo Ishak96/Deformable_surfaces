@@ -1,6 +1,7 @@
 #include<draw.h>
 #include <camera.h>
 #include <cloud.h>
+#include <X11/Xlib.h>
 #include <stdio.h>
 
 extern float xrot, yrot;
@@ -65,6 +66,8 @@ void display(void){
 }
 
 int main(int argc, char** argv){
+	int H, W;
+	getScreenSize(&H, &W);
 
 	if(argc < 6){
 		fprintf(stderr, "main: invalid argument!\n");
@@ -80,7 +83,7 @@ int main(int argc, char** argv){
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(800, 800);
+	glutInitWindowSize(H, W);
 	glutInitWindowPosition(50, 50);
 	glutCreateWindow("cloud points");
 

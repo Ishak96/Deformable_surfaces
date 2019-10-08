@@ -1,7 +1,7 @@
 #include<draw.h>
 
 void draw_superquadrics(summit** sum, double m, double n){
-	glColor3f(R, G, B);
+	glColor3f(r, g, b);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	
 	for(int i = 0; i <= (m-1); i++){
@@ -23,7 +23,7 @@ void DrawEllipsoid(unsigned int uiStacks, unsigned int uiSlices, double fA, doub
 	double tStep = (PI) / (double)uiSlices;
 	double sStep = (PI) / (double)uiStacks;
 	
-	glColor3f(R, G, B);
+	glColor3f(r, g, b);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	for(double t = -PI; t <= (PI)+.0001; t += tStep)
 	{
@@ -41,7 +41,7 @@ void DrawEllipsoid_cloud(unsigned int uiStacks, unsigned int uiSlices, double fA
 	double tStep = (PI) / (double)uiSlices;
 	double sStep = (PI) / (double)uiStacks;
 	
-	glColor3f(R, G, B);
+	glColor3f(r, g, b);
 	glPointSize(2);
 	glBegin(GL_POINTS);
 	for(double t = -PI; t <= (PI)+.0001; t += tStep)
@@ -70,4 +70,53 @@ void draw_cloud_point(float** cloud, int size, float* color){
 	}
 	
 	glEnd();
+}
+
+int getRootWindowSize(int *w, int *h){
+	Display* pdsp = NULL;
+	Window wid = 0;
+	XWindowAttributes xwAttr;
+
+	pdsp = XOpenDisplay(NULL);
+	if(!pdsp) {
+		fprintf(stderr, "Failed to open default display.\n");
+		return -1;
+	}
+
+	wid = DefaultRootWindow(pdsp);
+	if(0 > wid){
+		fprintf(stderr, "Failed to obtain the root windows Id of the default screen of given display.\n");
+		return -2;
+	}
+ 
+	XGetWindowAttributes(pdsp, wid, &xwAttr);
+	*w = xwAttr.width;
+	*h = xwAttr.height;
+
+	XCloseDisplay(pdsp);
+	return 0;
+}
+
+int getScreenSize(int *w, int*h){
+	
+	Display* pdsp = NULL;
+	Screen* pscr = NULL;
+
+	pdsp = XOpenDisplay(NULL);
+	if(!pdsp) {
+		fprintf(stderr, "Failed to open default display.\n");
+		return -1;
+	}
+
+	pscr = DefaultScreenOfDisplay(pdsp);
+	if(!pscr) {
+		fprintf(stderr, "Failed to obtain the default screen of given display.\n");
+		return -2;
+	}
+
+	*w = pscr->width;
+	*h = pscr->height;
+
+	XCloseDisplay(pdsp);
+	return 0;
 }

@@ -49,7 +49,7 @@ void display(void){
 	glPushMatrix();
 
 	if(size == 0)
-		cloud = generate_cloud_point(20, 20, a_t, b_t, c_t, e1_t, e2_t, &size);
+		cloud = generate_cloud_point(70, 70, a_t, b_t, c_t, e1_t, e2_t, &size);
 	
 	float color[3] = {1.0, 1.0, 1.0};
 	draw_cloud_point(cloud, size, color);
@@ -60,6 +60,8 @@ void display(void){
 }
 
 int main(int argc, char** argv){
+	int H, W;
+	getScreenSize(&H, &W);
 
 	if(argc < 5){
 		fprintf(stderr, "main: invalid argument!\n");
@@ -75,7 +77,7 @@ int main(int argc, char** argv){
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(800, 800);
+	glutInitWindowSize(H, W);
 	glutInitWindowPosition(400, 35);
 	glutCreateWindow("superquadrics modelization");
 

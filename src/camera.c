@@ -13,6 +13,8 @@ float ydiff = 0.0f;
 float zoom_x = 0.0;
 float zoom_y = 0.0;
 
+int aff = 1;
+
 void camera_idle(){
 	if (!mouseDown){
 		xrot += 0.3f;
@@ -68,6 +70,8 @@ void camera_keyboard(unsigned char key, int x, int y){
 		case 's':
 			zoom_y = zoom_y - .5; 
 			break;
+		case 'a':
+			aff = -aff;
 	};
 	glutPostRedisplay();
 }
