@@ -6,6 +6,7 @@
 
 extern float xrot, yrot;
 extern float zoom_x, zoom_y;
+extern int aff;
 
 //variables globales
 float color[3];
@@ -14,6 +15,12 @@ float** cloud;
 int size;
 float fact;
 int done = 0;
+
+float a_i, b_i, c_i, e1_i, e2_i, tx, ty, tz, angle1_i, angle2_i, angle3_i;
+double m_t = 25.f;
+double n_t = 25.f;
+summit** sum_t;
+int initial = 0;
 
 void init(void){
 	glClearColor(0, 0, 0, 0);
@@ -58,7 +65,42 @@ void display(void){
 	if(size < 0)
 		fprintf(stderr, "display: couldn't get cloud!\n");
 	else
-		draw_cloud_point(cloud, size, color);
+		if(aff == 1)
+			draw_cloud_point(cloud, size, color);
+
+	if(!initial){
+		float* initial_values = initial_parameters(cloud, size);
+		
+		if(initial_values != NULL){
+			e1_i = initial_values[0];
+			e2_i = initial_values[1];
+			tx = initial_values[2];
+			ty = initial_values[3];
+			tz = initial_values[4];
+			angle1_i = initial_values[5];
+			angle2_i = initial_values[6];
+			angle3_i = initial_values[7];
+			a_i = initial_values[8];
+			b_i = initial_values[9];
+			c_i = initial_values[10];
+
+			double** values = discretization(-PI, PI, -PI, PI, m_t, n_t);
+			sum_t = summit_building(a_i, b_i, c_i, e1_i, e2_i, m_t, n_t, values);
+
+		
+			glTranslatef(tx, ty, tz);
+			glRotatef(angle1_i, 1.0f, 0.0f, 0.0f);
+			glRotatef(angle2_i, 0.0f, 1.0f, 0.0f);
+			glRotatef(angle3_i, 0.0f, 0.0f, 1.0f);
+
+			draw_superquadrics(sum_t, m_t, n_t);
+
+			initial = 1;
+		}
+	}
+	else{
+		draw_superquadrics(sum_t, m_t, n_t);
+	}
 
 	glPopMatrix();
 	glFlush();
