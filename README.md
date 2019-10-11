@@ -2,7 +2,7 @@
 
 ## université de cergy pontoise
 ## Laboratoire : ETIS
-### Éyudiant : AYAD Ishak
+### Étudiant : AYAD Ishak
 ### Tuteur du projet : Brahim DERDOURI
 
 Projet de laboratoire M1 IISC
