@@ -41,6 +41,7 @@ void reshape(int w, int h){
 
 void display(void){
 
+	glPushMatrix();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glColor3d(1,0,0);
@@ -54,8 +55,6 @@ void display(void){
 	glTranslatef(zoom_x, zoom_y, 0.0);
 	glRotatef(xrot, 1.0f, 0.0f, 0.0f);
 	glRotatef(yrot, 0.0f, 1.0f, 0.0f);
-
-	glPushMatrix();
 
 	if(!done){
 		cloud = get_cloud_point(file_name, &size, fact);
@@ -99,6 +98,7 @@ void display(void){
 		}
 	}
 	else{
+		glTranslatef(tx, ty, tz);
 		draw_superquadrics(sum_t, m_t, n_t);
 	}
 

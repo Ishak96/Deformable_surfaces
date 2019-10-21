@@ -2,9 +2,9 @@
 
 int main(int argc, char** argv) {
 
-	if(argc < 5){
+	if(argc < 8){
 		fprintf(stderr, "main: invalid argument!\n");
-		printf("usage: %s [a] [b] [c] [e1] [e2]..\n", argv[0]);
+		printf("usage: %s [a] [b] [c] [e1] [e2] [origin x] [origin y] [origin z]..\n", argv[0]);
 		return -1;
 	}
 
@@ -13,9 +13,12 @@ int main(int argc, char** argv) {
 	float c_t = atof(argv[3]);
 	float e1_t = atof(argv[4]);
 	float e2_t = atof(argv[5]);
+	int xo = atoi(argv[6]);
+	int yo = atoi(argv[7]);
+	int zo = atoi(argv[8]);
 
 	int size;
-	float** cloud = generate_cloud_point(70, 70, a_t, b_t, c_t, e1_t, e2_t, &size);
+	float** cloud = generate_cloud_point(70, 70, a_t, b_t, c_t, e1_t, e2_t, &size, xo, yo, zo);
 
 	float* init_param = initial_parameters(cloud, size);
 

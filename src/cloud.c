@@ -1,4 +1,5 @@
 #include <cloud.h>
+#include <jacobi_eigenvalue.h>
 
 int get_size_cloud(const char* file_name){
 	FILE* file;
@@ -67,7 +68,8 @@ float** get_cloud_point(const char* file_name, int* size, float fact){
 	return cloud;
 }
 
-float** generate_cloud_point(unsigned int uiStacks, unsigned int uiSlices, double fA, double fB, double fC, double e1, double e2, int* size){
+float** generate_cloud_point(unsigned int uiStacks, unsigned int uiSlices, double fA, double fB, 
+							double fC, double e1, double e2, int* size, int xo, int yo, int zo){
 	double tStep = (PI) / (double)uiSlices;
 	double sStep = (PI) / (double)uiStacks;
 	
@@ -92,15 +94,15 @@ float** generate_cloud_point(unsigned int uiStacks, unsigned int uiSlices, doubl
 	{
 		for(double s = -PI; s <= PI+.0001; s += sStep)
 		{
-			cloud[size_tmp][0] = fA * fexp(cos(t), e1) * fexp(cos(s), e2);
-			cloud[size_tmp][1] = fB * fexp(cos(t), e1) * fexp(sin(s), e2);
-			cloud[size_tmp][2] = fC * fexp(sin(t), e1);
+			cloud[size_tmp][0] = fA * fexp(cos(t), e1) * fexp(cos(s), e2) + xo;
+			cloud[size_tmp][1] = fB * fexp(cos(t), e1) * fexp(sin(s), e2) + yo;
+			cloud[size_tmp][2] = fC * fexp(sin(t), e1) + zo;
 
 			size_tmp++;
 
-			cloud[size_tmp][0] = fA * fexp(cos(t+tStep), e1) * fexp(cos(s), e2);
-			cloud[size_tmp][1] = fB * fexp(cos(t+tStep), e1) * fexp(sin(s), e2);
-			cloud[size_tmp][2] = fC * fexp(sin(t+tStep), e1);
+			cloud[size_tmp][0] = fA * fexp(cos(t+tStep), e1) * fexp(cos(s), e2) + xo;
+			cloud[size_tmp][1] = fB * fexp(cos(t+tStep), e1) * fexp(sin(s), e2) + yo;
+			cloud[size_tmp][2] = fC * fexp(sin(t+tStep), e1) + zo;
 
 			size_tmp++;
 		}
@@ -117,137 +119,28 @@ int center_of_gravity(float** cloud, int size, float* tx, float* ty, float* tz){
  	}
 
  	for(int i = 0; i <= size; i++){
- 		(*tx) += cloud[i][0];
- 		(*ty) += cloud[i][1];
- 		(*ty) += cloud[i][2];
+ 		(*tx) = (*tx) + cloud[i][0];
+ 		(*ty) = (*ty) + cloud[i][1];
+ 		(*tz) = (*tz) + cloud[i][2];
  	}
 
-  	(*tx) /= (float)size;
- 	(*ty) /= (float)size;
- 	(*ty) /= (float)size;	
+  	(*tx) = (*tx) / (float)size;
+ 	(*ty) = (*ty) / (float)size;
+ 	(*tz) = (*tz) / (float)size;
+
+ 	(*tx) = floor(*tx + 0.5);
+ 	(*ty) = floor(*ty + 0.5);
+ 	(*tz) = floor(*tz + 0.5);
 
  	return 0;
 }
 
-void igenvalues(float M[3][3], float R[3][3], float* lambda1, float* lambda2, float* lambda3){
-	int i, j, p, q, flag;
-	float d[3][3], s[3][3], s1[3][3], s1t[3][3];
-	float temp[3][3], theta, zero=1e-4, max;
-
-	for(i = 0; i < 3; i++){
-		for(j = 0; j < 3; j++){
-			d[i][j] = M[i][j];
-			s[i][j] = 0;
-		}
-	}
-	
-	for(i = 0; i < 3; i++)
-		s[i][i]=1;
-
-	do{
-		flag = 0;
-		i=1;
-		j=2; 
-		max = fabs(d[1][2]);
-
-		for(p = 0; p < 3; p++){
-			for(q = 0; q < 3; q++){
-				if(p!=q){
-					if(max < fabs(d[p][q])){
-						max = fabs(d[p][q]); 
-						i=p; 
-						j=q;				
-					}				
-				}
-			}
-		}
-		
-		if(d[i][i] == d[j][j]){
-			if(d[i][j] > 0)
-				theta = PI / 4;
-			else
-				theta = -PI / 4;
-		}
-		else{
-			theta = 0.5 * atan(2 * d[i][j] / (d[i][i] - d[j][j]));
-		}
-		
-		for(p = 0; p < 3; p++){
-			for(q = 0; q < 3; q++){
-				s1[p][q]=0;
-				s1t[p][q]=0;
-			}
-		}
-		
-		for(p = 0; p < 3; p++){
-			s1[p][p] = 1; 
-			s1t[p][p] = 1;
-		}
-		
-		s1[i][i] = cos(theta); 
-		s1[j][j] = s1[i][i];
-		s1[j][i] = sin(theta); 
-		s1[i][j] = -s1[j][i];
-		s1t[i][i] = s1[i][i]; 
-		s1t[j][j] = s1[j][j];
-		s1t[i][j] = s1[j][i]; 
-		s1t[j][i] = s1[i][j];
-
-		for(i = 0; i < 3; i++){
-			for(j = 0; j < 3; j++){
-				temp[i][j] = 0;
-
-				for(p = 0;p < 3; p++){
-					temp[i][j] += s1t[i][p] * d[p][j];
-				}
-			}
-		}
-
-		for(i = 0; i < 3; i++){
-			for(j = 0; j < 3; j++){
-				d[i][j] = 0;
-
-				for(p = 0; p < 3; p++){
-					d[i][j] += temp[i][p] * s1[p][j];
-				}
-			}
-		}
-
-		for(i = 0; i < 3; i++){
-			for(j = 0; j < 3; j++){
-				temp[i][j] = 0;
-				
-				for(p = 0;p < 3; p++){
-					temp[i][j] += s[i][p] * s1[p][j];
-				}
-			}			
-		}
-
-		for(i = 0; i < 3; i++)
-			for(j = 0; j < 3; j++) 
-				s[i][j] = temp[i][j];
-
-		for(i = 0; i < 3; i++){
-			for(j = 0; j < 3;j++){
-				if(i != j)
-					if(fabs(d[i][j] > zero)) 
-						flag = 1;
-			}
-		}
-
-	}while(flag == 1);
-
-	*lambda1 = d[0][0];
-	*lambda2 = d[1][1];
-	*lambda3 = d[2][2];
-
-
-	for(i = 0; i < 3; i++)
-		for(j = 0; j < 3; j++)
-			R[j][i] = s[i][j];
-}
-
 int calculate_matrix_of_rotation(float M[3][3], float R[3][3], float* lambda1, float* lambda2, float* lambda3){
+ 	float EV[3];
+ 	float M_[9], R_[9];
+ 	int it_max = 500;
+ 	int IT_NUM, ROT_NUM;
+
  	if(M == NULL || R == NULL){
   		fprintf(stderr, "calculate_matrix_of_rotation: invalid argument!\n");
 		return -1;		
@@ -258,7 +151,23 @@ int calculate_matrix_of_rotation(float M[3][3], float R[3][3], float* lambda1, f
  		for(int j = 0; j < 3; j++)
  			R[i][j] = 0;
 
- 	igenvalues(M, R, lambda1, lambda2, lambda3);
+ 	int k = 0;
+ 	 for(int i = 0; i < 3; i ++){
+ 		for(int j = 0; j < 3; j++){
+ 			M_[k] = M[i][j];
+ 			k++;
+ 		}
+ 	}
+
+ 	jacobi_eigenvalue(3, M_, it_max, R_, EV, &IT_NUM, &ROT_NUM);
+
+ 	for(int i = 0; i < 3; i ++)
+ 		for(int j = 0; j < 3; j++)
+ 			R[i][j] = R_[3*i+j];
+
+ 	*lambda1 = EV[0];
+ 	*lambda2 = EV[1];
+ 	*lambda3 = EV[2];
 
  	return 0;
 }
@@ -302,21 +211,56 @@ int calculate_matrix_of_initial_moments(float** cloud, int size, float tx, float
 float* get_size_parameters(float** cloud, int size, float tx, float ty, float tz){
 	 float* init_size = malloc(sizeof(float) * 3);
 	 float max_x, max_y, max_z = -1000000000.0f;
+	 float *x, *y, *z;
 
 	 for(int i = 0; i <= size; i++){
-	 	if(cloud[i][0] > max_x)
+	 	if(cloud[i][0] > max_x){
 	 		max_x = cloud[i][0];
-	 	if(cloud[i][1] > max_y)
+	 		x = cloud[i];
+	 	}
+	 	if(cloud[i][1] > max_y){
 	 		max_y = cloud[i][1];
-	 	if(cloud[i][2] > max_z)
+	 		y = cloud[i];
+	 	}
+	 	if(cloud[i][2] > max_z){
 	 		max_z = cloud[i][2];
+	 		z = cloud[i];
+	 	}
 	 }
 
-	 init_size[0] = (tx > max_x) ? (tx - max_x) : (max_x - tx);
-	 init_size[1] = (ty > max_y) ? (ty - max_y) : (max_y - ty);
-	 init_size[2] = (tz > max_z) ? (tz - max_z) : (max_z - tz);
+	 init_size[0] = sqrt(pow((-x[0] + tx), 2) + pow((-x[1] + ty), 2) + pow((-x[2] + tz), 2));
+	 init_size[1] = sqrt(pow((-y[0] + tx), 2) + pow((-y[1] + ty), 2) + pow((-y[2] + tz), 2));
+	 init_size[2] = sqrt(pow((-z[0] + tx), 2) + pow((-z[1] + ty), 2) + pow((-z[2] + tz), 2));
 
 	 return init_size;
+}
+
+float* get_rotate_angle(float R[3][3]){
+	float* rotate_angle = malloc(sizeof(float) * 3);
+
+ 	if(rotate_angle == NULL){
+  		fprintf(stderr, "get_rotate_angle: invalid argument!\n");
+		return NULL;		
+ 	}
+
+ 	if(R[2][0] != -1.0f && R[2][0] != 1.0f){
+ 		rotate_angle[1] = -asin(R[2][0]);
+ 		rotate_angle[0] = atan2(R[2][1] / cos(rotate_angle[1]), R[2][2] / cos(rotate_angle[1]));
+ 		rotate_angle[2] = atan2(R[1][0] / cos(rotate_angle[1]), R[0][0] / cos(rotate_angle[1]));
+ 	}
+ 	else{
+ 		rotate_angle[2] = 0;
+ 		if(R[2][0] == -1.0f){
+ 			rotate_angle[1] = PI / 2;
+ 			rotate_angle[0] = rotate_angle[2] + atan2(R[0][1], R[0][2]);
+ 		}
+ 		else{
+ 			rotate_angle[1] = -PI / 2;
+ 			rotate_angle[0] = -rotate_angle[2] + atan2(-R[0][1], -R[0][2]);
+ 		}
+ 	}
+
+ 	return rotate_angle;
 }
 
 float* initial_parameters(float** cloud, int size){
@@ -349,17 +293,25 @@ float* initial_parameters(float** cloud, int size){
 		return NULL;	
  	}
 
- 	init_param[5] = -asin(R[0][2]);
- 	init_param[6] = atan2(-R[1][2] / cos(init_param[5]), -R[2][2] / cos(init_param[5]));
- 	init_param[7] = atan2(-R[0][1] / cos(init_param[6]), -R[0][0] / cos(init_param[6]));
+ 	float* init_rotate_angle = get_rotate_angle(R);
+
+ 	init_param[5] = init_rotate_angle[0];
+ 	init_param[6] = init_rotate_angle[1];
+ 	init_param[7] = init_rotate_angle[2];
 
  	float* init_size = get_size_parameters(cloud, size, init_param[2], init_param[3], init_param[4]);
+
+ 	if(init_size == NULL){
+  		fprintf(stderr, "initial_parameters: invalid argument!\n");
+		return NULL;	 		
+ 	}
 
  	init_param[8] = init_size[0];
  	init_param[9] = init_size[1];
  	init_param[10] = init_size[2];
 
  	free(init_size);
+ 	free(init_rotate_angle);
 
  	return init_param;
  }

@@ -13,6 +13,7 @@ float** cloud;
 int size = 0;
 int initial = 0;
 float a_i, b_i, c_i, e1_i, e2_i, tx, ty, tz, angle1_i, angle2_i, angle3_i;
+int xo, yo, zo;
 
 GLfloat angle = 90;
 
@@ -39,6 +40,7 @@ void reshape(int w, int h){
 
 void display(void){
 
+	glPushMatrix();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glColor3d(1,0,0);
@@ -53,10 +55,8 @@ void display(void){
 	glRotatef(xrot, 1.0f, 0.0f, 0.0f);
 	glRotatef(yrot, 0.0f, 1.0f, 0.0f);
 
-	glPushMatrix();
-
 	if(size == 0)
-		cloud = generate_cloud_point(70, 70, a_t, b_t, c_t, e1_t, e2_t, &size);
+		cloud = generate_cloud_point(70, 70, a_t, b_t, c_t, e1_t, e2_t, &size, xo, yo, zo);
 	
 	float color[3] = {1.0, 0.0, 0.0};
 	draw_cloud_point(cloud, size, color);
@@ -92,8 +92,10 @@ void display(void){
 		}
 	}
 	else
-		if(aff == 1)
+		if(aff == 1){
+			glTranslatef(tx, ty, tz);
 			draw_superquadrics(sum_t, m_t, n_t);
+		}
 
 
 	glPopMatrix();
@@ -105,9 +107,9 @@ int main(int argc, char** argv){
 	int H, W;
 	getScreenSize(&H, &W);
 
-	if(argc < 5){
+	if(argc < 8){
 		fprintf(stderr, "main: invalid argument!\n");
-		printf("usage: %s [a] [b] [c] [e1] [e2]..\n", argv[0]);
+		printf("usage: %s [a] [b] [c] [e1] [e2] [origin x] [origin y] [origin z]..\n", argv[0]);
 		return -1;
 	}
 
@@ -116,6 +118,9 @@ int main(int argc, char** argv){
 	c_t = atof(argv[3]);
 	e1_t = atof(argv[4]);
 	e2_t = atof(argv[5]);
+	xo = atoi(argv[6]);
+	yo = atoi(argv[7]);
+	zo = atoi(argv[8]);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);

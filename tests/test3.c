@@ -10,6 +10,9 @@ extern float zoom_x, zoom_y;
 double a_t,b_t,c_t,e1_t,e2_t;
 float** cloud;
 int size = 0;
+int xo = 0;
+int yo = 0;
+int zo = 0;
 
 GLfloat angle = 90;
 
@@ -49,7 +52,7 @@ void display(void){
 	glPushMatrix();
 
 	if(size == 0)
-		cloud = generate_cloud_point(70, 70, a_t, b_t, c_t, e1_t, e2_t, &size);
+		cloud = generate_cloud_point(70, 70, a_t, b_t, c_t, e1_t, e2_t, &size, xo, yo, zo);
 	
 	float color[3] = {1.0, 1.0, 1.0};
 	draw_cloud_point(cloud, size, color);
