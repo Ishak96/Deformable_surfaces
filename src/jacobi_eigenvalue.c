@@ -6,12 +6,8 @@
 
 # include <jacobi_eigenvalue.h>
 
-/******************************************************************************/
-
 void jacobi_eigenvalue (int n, float a[], int it_max, float v[], 
   float d[], int *it_num, int *rot_num)
-
-/******************************************************************************/
 /*
   Purpose:
 
@@ -243,11 +239,8 @@ void jacobi_eigenvalue (int n, float a[], int it_max, float v[],
 
   return;
 }
-/******************************************************************************/
 
 void r8mat_diag_get_vector (int n, float a[], float v[])
-
-/******************************************************************************/
 /*
   Purpose:
 
@@ -277,11 +270,8 @@ void r8mat_diag_get_vector (int n, float a[], float v[])
 
   return;
 }
-/******************************************************************************/
 
 void r8mat_identity  (int n, float a[])
-
-/******************************************************************************/
 /*
   Purpose:
 
