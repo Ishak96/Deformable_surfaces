@@ -17,8 +17,8 @@ int xo, yo, zo;
 
 GLfloat angle = 90;
 
-double m_t = 25.f;
-double n_t = 25.f;
+double m_t = 15.f;
+double n_t = 15.f;
 summit** sum_t;
 
 void init(void){

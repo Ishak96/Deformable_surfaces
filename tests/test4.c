@@ -17,8 +17,8 @@ float fact;
 int done = 0;
 
 float a_i, b_i, c_i, e1_i, e2_i, tx, ty, tz, angle1_i, angle2_i, angle3_i;
-double m_t = 25.f;
-double n_t = 25.f;
+double m_t = 15.f;
+double n_t = 15.f;
 summit** sum_t;
 int initial = 0;
 

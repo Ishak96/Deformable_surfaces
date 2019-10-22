@@ -211,26 +211,22 @@ int calculate_matrix_of_initial_moments(float** cloud, int size, float tx, float
 float* get_size_parameters(float** cloud, int size, float tx, float ty, float tz){
 	 float* init_size = malloc(sizeof(float) * 3);
 	 float max_x, max_y, max_z = -1000000000.0f;
-	 float *x, *y, *z;
 
 	 for(int i = 0; i <= size; i++){
 	 	if(cloud[i][0] > max_x){
 	 		max_x = cloud[i][0];
-	 		x = cloud[i];
 	 	}
 	 	if(cloud[i][1] > max_y){
 	 		max_y = cloud[i][1];
-	 		y = cloud[i];
 	 	}
 	 	if(cloud[i][2] > max_z){
 	 		max_z = cloud[i][2];
-	 		z = cloud[i];
 	 	}
 	 }
 
-	 init_size[0] = sqrt(pow((-x[0] + tx), 2) + pow((-x[1] + ty), 2) + pow((-x[2] + tz), 2));
-	 init_size[1] = sqrt(pow((-y[0] + tx), 2) + pow((-y[1] + ty), 2) + pow((-y[2] + tz), 2));
-	 init_size[2] = sqrt(pow((-z[0] + tx), 2) + pow((-z[1] + ty), 2) + pow((-z[2] + tz), 2));
+	 init_size[0] = abs(-max_x + tx);
+	 init_size[1] = abs(-max_y + ty);
+	 init_size[2] = abs(-max_z + tz);
 
 	 return init_size;
 }

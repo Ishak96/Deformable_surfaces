@@ -6,8 +6,8 @@ extern float xrot, yrot;
 extern float zoom_x, zoom_y;
 
 //global variables
-double m_t = 25.f;
-double n_t = 25.f;
+double m_t = 15.f;
+double n_t = 15.f;
 double a_t,b_t,c_t,p_t,q_t;
 summit** sum_t;
 
