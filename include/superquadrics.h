@@ -10,6 +10,13 @@ typedef struct {
 	double z;
 }summit;
 
+typedef struct{
+	float parameters[15];
+	summit** summits;
+	float m;
+	float n;
+}superquadrics;
+
 double sign(double x);
 double abs_(double x);
 double fexp(double x, double p);

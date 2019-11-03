@@ -2,6 +2,7 @@
 #define DRAW_H
 
 #include <superquadrics.h>
+#include <deformation.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>

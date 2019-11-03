@@ -4,10 +4,11 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <superquadrics.h>
 
-int taper(float** cloud, int size, float kx, float ky);
-int reverse_taper(float** cloud, int size, float kx, float ky);
-int bend(float** cloud, int size, float k, float alpha);
-int reverse_bend(float** cloud, int size, float k, float alpha);
+int taper(superquadrics forme);
+int reverse_taper(superquadrics forme);
+int bend(superquadrics forme);
+int reverse_bend(superquadrics forme);
 
 #endif

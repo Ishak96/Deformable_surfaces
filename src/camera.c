@@ -1,5 +1,6 @@
 #include <camera.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int fullscreen = 0;
 int mouseDown = 0;
@@ -14,6 +15,10 @@ float zoom_x = 0.0;
 float zoom_y = 0.0;
 
 int aff = 1;
+
+int taper_control = 0;
+
+float kx, ky;
 
 void camera_idle(){
 	if (!mouseDown){
@@ -72,6 +77,17 @@ void camera_keyboard(unsigned char key, int x, int y){
 			break;
 		case 'a':
 			aff = -aff;
+			break;
+		case 't':
+			taper_control = 1;
+			printf("\nentre kx:");
+			scanf("%f", &kx);
+			printf("\nentre ky:");
+			scanf("%f", &ky);
+			break;
+		case 'r':
+			taper_control = -1;
+			break;
 	};
 	glutPostRedisplay();
 }
