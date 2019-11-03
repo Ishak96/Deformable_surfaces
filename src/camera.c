@@ -17,8 +17,9 @@ float zoom_y = 0.0;
 int aff = 1;
 
 int taper_control = 0;
+int bend_control = 0;
 
-float kx, ky;
+float kx, ky, k, alpha;
 
 void camera_idle(){
 	if (!mouseDown){
@@ -85,8 +86,16 @@ void camera_keyboard(unsigned char key, int x, int y){
 			printf("\nentre ky:");
 			scanf("%f", &ky);
 			break;
+		case 'b':
+			bend_control = 1;
+			printf("\nentre k:");
+			scanf("%f", &k);
+			printf("\nentre alpha:");
+			scanf("%f", &alpha);
+			break;
 		case 'r':
 			taper_control = -1;
+			bend_control = -1;
 			break;
 	};
 	glutPostRedisplay();
