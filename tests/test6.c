@@ -8,7 +8,7 @@ extern float zoom_x, zoom_y;
 extern int aff;
 
 //global variables
-double a_t,b_t,c_t,e1_t,e2_t;
+double a_t,b_t,c_t,e1_t,e2_t,r0_t,r1_t;
 float** cloud;
 int size = 0;
 int initial = 0;
@@ -56,7 +56,7 @@ void display(void){
 	glRotatef(yrot, 0.0f, 1.0f, 0.0f);
 
 	if(size == 0)
-		cloud = generate_cloud_point(70, 70, a_t, b_t, c_t, e1_t, e2_t, &size, xo, yo, zo);
+		cloud = generate_cloud_point(70, 70, a_t, b_t, c_t, e1_t, e2_t, &size, xo, yo, zo, r0_t, r1_t);
 	
 	float color[3] = {1.0, 0.0, 0.0};
 	draw_cloud_point(cloud, size, color);
@@ -78,7 +78,7 @@ void display(void){
 			c_i = initial_values[10];
 
 			double** values = discretization(-PI, PI, -PI, PI, m_t, n_t);
-			sum_t = summit_building(a_i, b_i, c_i, e1_i, e2_i, m_t, n_t, values);
+			sum_t = summit_building(a_i, b_i, c_i, e1_i, e2_i, m_t, n_t, values, 0, 1);
 
 		
 			glTranslatef(tx, ty, tz);
@@ -107,9 +107,10 @@ int main(int argc, char** argv){
 	int H, W;
 	getScreenSize(&H, &W);
 
-	if(argc < 8){
+	if(argc < 11){
 		fprintf(stderr, "main: invalid argument!\n");
-		printf("usage: %s [a] [b] [c] [e1] [e2] [origin x] [origin y] [origin z]..\n", argv[0]);
+		printf("usage: %s [a] [b] [c] [e1] [e2] [origin x] [origin y] [origin z] [r0] [r1]..\n", argv[0]);
+		printf("give r0 = 0 and r1 = 1 to gener a normal superquadrics\n");
 		return -1;
 	}
 
@@ -121,6 +122,8 @@ int main(int argc, char** argv){
 	xo = atoi(argv[6]);
 	yo = atoi(argv[7]);
 	zo = atoi(argv[8]);
+	r0_t = atof(argv[9]);
+	r1_t = atof(argv[10]);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);

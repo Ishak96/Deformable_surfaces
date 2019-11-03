@@ -15,12 +15,12 @@ double fexp(double x, double p){
 	return ( sign(x) * (pow(abs_(x), p)) );
 }
 
-summit func_eval(double a, double b, double c, double e1, double e2, double phi, double theta){
+summit func_eval(double a, double b, double c, double e1, double e2, double phi, double theta, double r0, double r1){
 	summit coordinates;
 
-	coordinates.x = a * (fexp(cos(phi), e1)) * (fexp(cos(theta), e2));
-	coordinates.y = b * (fexp(cos(phi), e1)) * (fexp(sin(theta), e2));
-	coordinates.z = c * (fexp(sin(phi), e1));
+	coordinates.x = a * (r0 + r1 * fexp(cos(phi), e1)) * (fexp(cos(theta), e2));
+	coordinates.y = b * (r0 + r1 * fexp(cos(phi), e1)) * (fexp(sin(theta), e2));
+	coordinates.z = c * (r1 * fexp(sin(phi), e1));
 
 	return coordinates;
 }
@@ -43,7 +43,8 @@ double** discretization(double a, double b, double a_p, double b_p, double m, do
 	return values;
 }
 
-summit** summit_building(double a, double b, double c, double p, double q, double m, double n, double** espace){
+summit** summit_building(double a, double b, double c, double p, double q, double m, double n, 
+						 double** espace, double r0, double r1){
 	summit** sum;
 
 	sum = malloc((m+1) * sizeof(summit*));
@@ -53,7 +54,7 @@ summit** summit_building(double a, double b, double c, double p, double q, doubl
 
 	for(int i = 0; i <= m; i++){
 		for(int j = 0; j <= n; j++){
-			sum[i][j] = func_eval(a, b, c, p, q, espace[0][i], espace[1][j]);
+			sum[i][j] = func_eval(a, b, c, p, q, espace[0][i], espace[1][j], r0, r1);
 		}
 	}
 

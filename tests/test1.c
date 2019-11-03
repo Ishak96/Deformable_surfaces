@@ -13,6 +13,8 @@ int main(int argc, char** argv) {
 	double c = 2;
 	double p = 0;
 	double q = 0;
+	double r0 = 1;
+	double r1 = 0.5;
 	
 	double** values = discretization(-PI / 2, PI / 2, -PI, PI, m, n);
 
@@ -27,7 +29,7 @@ int main(int argc, char** argv) {
 	}
 
 	printf("\n\n summit building :");
-	summit** sum = summit_building(a, b, c, p, q, m, n, values);
+	summit** sum = summit_building(a, b, c, p, q, m, n, values, r0, r1);
 
 	for(int i = 0; i <= m; i++){
 		for(int j = 0; j <= n; j++){

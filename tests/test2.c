@@ -8,7 +8,7 @@ extern float zoom_x, zoom_y;
 //global variables
 double m_t = 15.f;
 double n_t = 15.f;
-double a_t,b_t,c_t,p_t,q_t;
+double a_t,b_t,c_t,p_t,q_t,r0_t,r1_t;
 summit** sum_t;
 
 void init(void){
@@ -46,7 +46,7 @@ void display(void){
 
 	glPushMatrix();
 		double** values = discretization(-PI, PI, -PI, PI, m_t, n_t);
-		sum_t = summit_building(a_t, b_t, c_t, p_t, q_t, m_t, n_t, values);
+		sum_t = summit_building(a_t, b_t, c_t, p_t, q_t, m_t, n_t, values, r0_t, r1_t);
 		draw_superquadrics(sum_t, m_t, n_t);
 
 	glPopMatrix();
@@ -56,9 +56,10 @@ void display(void){
 
 int main(int argc, char** argv){
 
-	if(argc < 5){
+	if(argc < 8){
 		fprintf(stderr, "main: invalid argument!\n");
-		printf("usage: %s [a] [b] [c] [e1] [e2]..\n", argv[0]);
+		printf("usage: %s [a] [b] [c] [e1] [e2] [r0] [r1]..\n", argv[0]);
+		printf("give r0 = 0 and r1 = 1 to gener a normal superquadrics\n");
 		return -1;
 	}
 
@@ -67,6 +68,8 @@ int main(int argc, char** argv){
 	c_t = atof(argv[3]);
 	p_t = atof(argv[4]);
 	q_t = atof(argv[5]);
+	r0_t = atof(argv[6]);
+	r1_t = atof(argv[7]);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);

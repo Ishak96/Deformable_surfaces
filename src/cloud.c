@@ -69,7 +69,7 @@ float** get_cloud_point(const char* file_name, int* size, float fact){
 }
 
 float** generate_cloud_point(unsigned int uiStacks, unsigned int uiSlices, double fA, double fB, 
-							double fC, double e1, double e2, int* size, int xo, int yo, int zo){
+							double fC, double e1, double e2, int* size, int xo, int yo, int zo, double r0, double r1){
 	double tStep = (PI) / (double)uiSlices;
 	double sStep = (PI) / (double)uiStacks;
 	
@@ -94,15 +94,15 @@ float** generate_cloud_point(unsigned int uiStacks, unsigned int uiSlices, doubl
 	{
 		for(double s = -PI; s <= PI+.0001; s += sStep)
 		{
-			cloud[size_tmp][0] = fA * fexp(cos(t), e1) * fexp(cos(s), e2) + xo;
-			cloud[size_tmp][1] = fB * fexp(cos(t), e1) * fexp(sin(s), e2) + yo;
-			cloud[size_tmp][2] = fC * fexp(sin(t), e1) + zo;
+			cloud[size_tmp][0] = fA * (r0 + r1 * fexp(cos(t), e1)) * fexp(cos(s), e2) + xo;
+			cloud[size_tmp][1] = fB * (r0 + r1 *fexp(cos(t), e1)) * fexp(sin(s), e2) + yo;
+			cloud[size_tmp][2] = fC * (r1 * fexp(sin(t), e1)) + zo;
 
 			size_tmp++;
 
-			cloud[size_tmp][0] = fA * fexp(cos(t+tStep), e1) * fexp(cos(s), e2) + xo;
-			cloud[size_tmp][1] = fB * fexp(cos(t+tStep), e1) * fexp(sin(s), e2) + yo;
-			cloud[size_tmp][2] = fC * fexp(sin(t+tStep), e1) + zo;
+			cloud[size_tmp][0] = fA * (r0 + r1 * fexp(cos(t+tStep), e1)) * fexp(cos(s), e2) + xo;
+			cloud[size_tmp][1] = fB * (r0 + r1 * fexp(cos(t+tStep), e1)) * fexp(sin(s), e2) + yo;
+			cloud[size_tmp][2] = fC * (r1 * fexp(sin(t+tStep), e1)) + zo;
 
 			size_tmp++;
 		}

@@ -84,7 +84,7 @@ void display(void){
 			c_i = initial_values[10];
 
 			double** values = discretization(-PI, PI, -PI, PI, m_t, n_t);
-			sum_t = summit_building(a_i, b_i, c_i, e1_i, e2_i, m_t, n_t, values);
+			sum_t = summit_building(a_i, b_i, c_i, e1_i, e2_i, m_t, n_t, values, 0, 1);
 
 		
 			glTranslatef(tx, ty, tz);

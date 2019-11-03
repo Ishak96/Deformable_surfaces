@@ -2,9 +2,10 @@
 
 int main(int argc, char** argv) {
 
-	if(argc < 8){
+	if(argc < 11){
 		fprintf(stderr, "main: invalid argument!\n");
-		printf("usage: %s [a] [b] [c] [e1] [e2] [origin x] [origin y] [origin z]..\n", argv[0]);
+		printf("usage: %s [a] [b] [c] [e1] [e2] [origin x] [origin y] [origin z] [r0] [r1]..\n", argv[0]);
+		printf("give r0 = 0 and r1 = 1 to gener a normal superquadrics\n");
 		return -1;
 	}
 
@@ -16,9 +17,11 @@ int main(int argc, char** argv) {
 	int xo = atoi(argv[6]);
 	int yo = atoi(argv[7]);
 	int zo = atoi(argv[8]);
+	double r0 = atof(argv[9]);
+	double r1 = atof(argv[10]);
 
 	int size;
-	float** cloud = generate_cloud_point(70, 70, a_t, b_t, c_t, e1_t, e2_t, &size, xo, yo, zo);
+	float** cloud = generate_cloud_point(70, 70, a_t, b_t, c_t, e1_t, e2_t, &size, xo, yo, zo, r0, r1);
 
 	float* init_param = initial_parameters(cloud, size);
 
