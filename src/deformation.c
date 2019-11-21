@@ -1,102 +1,135 @@
 #include <deformation.h>
 
-int taper(superquadrics forme){
+summit taper(summit sum, float kx, float ky, float a3){
+	float fact_x = kx / a3;
+	float fact_y = ky / a3;
+
+	summit sum_result;
+	sum_result.x = ((fact_x * sum.z) + 1.f) * sum.x;
+	sum_result.y = ((fact_y * sum.z) + 1.f) * sum.y;
+	sum_result.z = sum.z;
+
+	return sum_result;
+}
+
+summit bend(summit sum, float k, float alpha){
+	float beta = atan(sum.y / sum.x);
+	float gama = sum.z / k;
+	float r = cos(alpha - beta) * sqrt(pow(sum.x, 2) + pow(sum.y, 2));
+	float R = (1 / k) - cos(gama) * ((1 / k) - r);
+
+	summit sum_result;
+	sum_result.x = sum.x + (R - r) * cos(alpha);
+	sum_result.y = sum.y + (R - r) * sin(alpha);
+	sum_result.z = ((1 / k) - r) * sin(gama);
+
+	return sum_result;	
+}
+
+summit twist(summit sum, float n, float a1){
+	
+	float theta = n*(PI+(sum.x/a1)*PI);
+	
+	summit sum_result;
+
+	sum_result.x = sum.x;
+	sum_result.y = sum.y*cos(theta)-sum.z*sin(theta);
+	sum_result.z = sum.y*sin(theta)+sum.z*cos(theta);
+
+	return sum_result;
+}
+
+int taper_forme(superquadrics forme){
  	if(forme.summits == NULL || forme.parameters == NULL){
  		fprintf(stderr, "taper: invalid argument!\n");
 		return -1;		
  	}
 
-	float fact_x = forme.parameters[11] / forme.parameters[10];
-	float fact_y = forme.parameters[12] / forme.parameters[10];
+	float kx = forme.parameters[11];
+	float ky = forme.parameters[12];
+	float a3 = forme.parameters[10];
 	for(int i = 0; i <= forme.m; i++){
 		for(int j = 0; j <= forme.n; j++){
-			float x = forme.summits[i][j].x;
-			float y = forme.summits[i][j].y;
-			float z = forme.summits[i][j].z;
-
-			forme.summits[i][j].x = ((fact_x * z) + 1.f) * x;
-			forme.summits[i][j].y = ((fact_y * z) + 1.f) * y;
-			forme.summits[i][j].z = z;
+			forme.summits[i][j] = taper(forme.summits[i][j], kx, ky, a3);
 		}
 	}
 
  	return 0;
 }
 
-int reverse_taper(superquadrics forme){
- 	if(forme.summits == NULL || forme.parameters == NULL){
- 		fprintf(stderr, "reverse_taper: invalid argument!\n");
-		return -1;		
- 	}
-
-	float fact_x = forme.parameters[11] / forme.parameters[10];
-	float fact_y = forme.parameters[12] / forme.parameters[10];
-	for(int i = 0; i <= forme.m; i++){
-		for(int j = 0; j <= forme.n; j++){
-			float x = forme.summits[i][j].x;
-			float y = forme.summits[i][j].y;
-			float z = forme.summits[i][j].z;
-
-			forme.summits[i][j].x = x / ((fact_x * z) + 1.f);
-			forme.summits[i][j].y = y / ((fact_y * z) + 1.f);
-			forme.summits[i][j].z = z;
-		}
-	}
-
- 	return 0;
-}
-
-int bend(superquadrics forme){
+int bend_forme(superquadrics forme){
  	if(forme.summits == NULL || forme.parameters == NULL){
  		fprintf(stderr, "bend: invalid argument!\n");
 		return -1;		
  	}
 
-	float k = forme.parameters[13];
-	float alpha = forme.parameters[14];
-	float r, lamda, R;
+ 	float k = forme.parameters[13];
+ 	float alpha = forme.parameters[14];
 	for(int i = 0; i <= forme.m; i++){
-		for(int j = 0; j <= forme.n; j++){
-			float x = forme.summits[i][j].x;
-			float y = forme.summits[i][j].y;
-			float z = forme.summits[i][j].z;
-
-			r = cos(alpha - atan(y / x)) * sqrt(pow(x, 2) + pow(y, 2));
-			lamda = z * k;
-			R = pow(k, -1) - cos(lamda) * (pow(k, -1) - r);
-
-			forme.summits[i][j].x = x + (cos(alpha) * (R - r));
-			forme.summits[i][j].y = y + (sin(alpha) * (R - r));
-			forme.summits[i][j].z = sin(lamda) * (pow(k, -1) - r);
+		for(int j = 0; j <= forme.n; j++){		
+			forme.summits[i][j] = bend(forme.summits[i][j], k, alpha);	
 		}
 	}
 
  	return 0;
 }
 
-int reverse_bend(superquadrics forme){
+int twist_forme(superquadrics forme){
+ 	if(forme.summits == NULL || forme.parameters == NULL){
+ 		fprintf(stderr, "bend: invalid argument!\n");
+		return -1;		
+ 	}
+
+ 	float n = forme.parameters[15];
+ 	float a1 = forme.parameters[8];
+	for(int i = 0; i <= forme.m; i++){
+		for(int j = 0; j <= forme.n; j++){		
+			forme.summits[i][j] = twist(forme.summits[i][j], n, a1);	
+		}
+	}
+
+ 	return 0;
+}
+
+summit reverse_taper(summit sum, float kx, float ky, float a3){
+	float fact_x = kx / a3;
+	float fact_y = ky / a3;	
+
+	summit sum_result;
+	sum_result.x = sum.x / ((fact_x * sum.z) + 1.f);
+	sum_result.y = sum.y / ((fact_y * sum.z) + 1.f);
+	sum_result.z = sum.z;
+
+	return sum_result;
+}
+
+int reverse_taper_forme(superquadrics forme){
+ 	if(forme.summits == NULL || forme.parameters == NULL){
+ 		fprintf(stderr, "reverse_taper: invalid argument!\n");
+		return -1;		
+ 	}
+
+	float kx = forme.parameters[11];
+	float ky = forme.parameters[12];
+	float a3 = forme.parameters[10];
+	for(int i = 0; i <= forme.m; i++){
+		for(int j = 0; j <= forme.n; j++){
+			forme.summits[i][j] = reverse_taper(forme.summits[i][j], kx, ky, a3);
+		}
+	}
+
+ 	return 0;
+}
+
+int reverse_bend_forme(superquadrics forme){
  	if(forme.summits == NULL || forme.parameters == NULL){
  		fprintf(stderr, "reverse_bend: invalid argument!\n");
 		return -1;		
  	}
 
- 	float k = forme.parameters[13];
-	float alpha = forme.parameters[14];
-	float r, lamda, R;
 	for(int i = 0; i <= forme.m; i++){
 		for(int j = 0; j <= forme.n; j++){
-			float x = forme.summits[i][j].x;
-			float y = forme.summits[i][j].y;
-			float z = forme.summits[i][j].z;
 
-			R = (x == 0) ? cos(alpha) * sqrt((y*y)): cos(alpha - atan(y / x)) * sqrt((x*x) + (y*y));
-			float value = (k == 0) ? -R : (1 / k) - R;
-			lamda = (value == 0) ? 0.f : atan(z / value);
-			r = (k == 0) ? -sqrt((z*z) + (value*value)) : (1 / k) - sqrt((z*z) + (value*value));
-
-			forme.summits[i][j].x = x - cos(alpha) * (R - r);
-			forme.summits[i][j].y = y - sin(alpha) * (R - r);
-			forme.summits[i][j].z = (k == 0) ? 0 : (1 / k) * lamda;
 		}
 	}
 

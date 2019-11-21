@@ -4,10 +4,10 @@
 
 extern float xrot, yrot;
 extern float zoom_x, zoom_y;
-extern int taper_control;
+extern int twist_control;
 //global variables
 double a_t,b_t,c_t,p_t,q_t,r0_t,r1_t;
-extern float kx, ky;
+extern float n;
 
 superquadrics forme;
 
@@ -46,19 +46,12 @@ void display(void){
 
 	glPushMatrix();
 	
-	if(taper_control == 1){
-		forme.parameters[11] = kx;
-		forme.parameters[12] = ky;
-		if(taper_forme(forme) < 0){
+	if(twist_control == 1){
+		forme.parameters[15] = n;
+		if(twist_forme(forme) < 0){
 			fprintf(stderr, "bed test_taper: invalid argument!\n");
 		}
-		taper_control = 0;
-	}
-	else if(taper_control == -1){
-		if(reverse_taper_forme(forme) < 0){
-			fprintf(stderr, "reverse_ben test_taper: invalid argument!\n");
-		}
-		taper_control = 0;
+		twist_control = 0;
 	}
 
 	draw_superquadrics(forme.summits, forme.m, forme.n);
@@ -85,11 +78,11 @@ int main(int argc, char** argv){
 	r0_t = atof(argv[6]);
 	r1_t = atof(argv[7]);
 
-	forme.parameters[10] = c_t;
 	forme.m = 15.f;
 	forme.n = 15.f;
 	double** values = discretization(-PI, PI, -PI, PI, forme.m, forme.n);
 	forme.summits = summit_building(a_t, b_t, c_t, p_t, q_t, forme.m, forme.n, values, r0_t, r1_t);
+	forme.parameters[8] = a_t;
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);

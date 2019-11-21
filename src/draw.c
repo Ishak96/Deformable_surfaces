@@ -19,6 +19,20 @@ void draw_superquadrics(summit** sum, double m, double n){
 	}
 }
 
+void draw_debug(summit** sum, double m, double n){
+	glColor3f(r, g, b);
+	glPointSize(2);
+	glBegin(GL_POINTS);
+	
+	for(int i = 0; i <= (m-1); i++){
+		glBegin(GL_TRIANGLE_STRIP);
+		for(int j = 0; j <= (n-1); j++){
+				glVertex3f(sum[i][j].x,sum[i][j].y,sum[i][j].z);
+		}
+	}
+	glEnd();
+}
+
 void DrawEllipsoid(unsigned int uiStacks, unsigned int uiSlices, double fA, double fB, double fC, double e1, double e2){
 	double tStep = (PI) / (double)uiSlices;
 	double sStep = (PI) / (double)uiStacks;

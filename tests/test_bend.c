@@ -49,19 +49,19 @@ void display(void){
 	if(bend_control == 1){
 		forme.parameters[13] = k;
 		forme.parameters[14] = alpha;
-		if(bend(forme) < 0){
+		if(bend_forme(forme) < 0){
 			fprintf(stderr, "bed test_taper: invalid argument!\n");
 		}
 		bend_control = 0;
 	}
 	else if(bend_control == -1){
-		if(reverse_bend(forme) < 0){
+		if(reverse_bend_forme(forme) < 0){
 			fprintf(stderr, "reverse_ben test_taper: invalid argument!\n");
 		}
 		bend_control = 0;
 	}
 
-	draw_superquadrics(forme.summits, forme.m, forme.n);
+	draw_debug(forme.summits, forme.m, forme.n);
 
 	glPopMatrix();
 	glFlush();
@@ -85,9 +85,9 @@ int main(int argc, char** argv){
 	r0_t = atof(argv[6]);
 	r1_t = atof(argv[7]);
 
-	forme.m = 15.f;
-	forme.n = 15.f;
-	double** values = discretization(-PI, PI, -PI, PI, forme.m, forme.n);
+	forme.m = 35.f;
+	forme.n = 35.f;
+	double** values = discretization(-PI / 2, PI / 2, -PI, PI, forme.m, forme.n);
 	forme.summits = summit_building(a_t, b_t, c_t, p_t, q_t, forme.m, forme.n, values, r0_t, r1_t);
 
 	glutInit(&argc, argv);

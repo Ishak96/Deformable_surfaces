@@ -18,8 +18,9 @@ int aff = 1;
 
 int taper_control = 0;
 int bend_control = 0;
+int twist_control = 0;
 
-float kx, ky, k, alpha;
+float kx, ky, k, alpha, n;
 
 void camera_idle(){
 	if (!mouseDown){
@@ -63,6 +64,7 @@ void camera_mouseMotion(int x, int y){
 }
 
 void camera_keyboard(unsigned char key, int x, int y){
+	int select;
 	switch (key){
 		case 'd':
 			zoom_x = zoom_x + .5; 
@@ -80,11 +82,20 @@ void camera_keyboard(unsigned char key, int x, int y){
 			aff = -aff;
 			break;
 		case 't':
-			taper_control = 1;
-			printf("\nentre kx:");
-			scanf("%f", &kx);
-			printf("\nentre ky:");
-			scanf("%f", &ky);
+			printf("1)twist or 2)taper:\n");
+			scanf("%d", &select);
+			if(select == 1){
+				twist_control = 1;
+				printf("\nentre n:");
+				scanf("%f", &n);
+			}
+			else{
+				taper_control = 1;
+				printf("\nentre kx:");
+				scanf("%f", &kx);
+				printf("\nentre ky:");
+				scanf("%f", &ky);
+			}
 			break;
 		case 'b':
 			bend_control = 1;

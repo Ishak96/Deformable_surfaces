@@ -11,7 +11,7 @@ typedef struct {
 }summit;
 
 typedef struct{
-	float parameters[15];
+	float parameters[16];
 	summit** summits;
 	float m;
 	float n;
