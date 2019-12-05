@@ -48,9 +48,12 @@ int taper_forme(superquadrics forme){
 	float kx = forme.kx;
 	float ky = forme.ky;
 	float a3 = forme.a3;
-	for(int i = 0; i <= forme.m; i++){
-		for(int j = 0; j <= forme.n; j++){
-			forme.summits[i][j] = taper(forme.summits[i][j], kx, ky, a3);
+
+ 	int m = forme.m;
+ 	int n = forme.n;
+	for(int i = 0; i <= m; i++){
+		for(int j = 0; j <= n; j++){
+			forme.summits[i*n+j] = taper(forme.summits[i*n+j], kx, ky, a3);
 		}
 	}
 
@@ -65,9 +68,12 @@ int bend_forme(superquadrics forme){
 
  	float k = forme.k;
  	float alpha = forme.alpha;
-	for(int i = 0; i <= forme.m; i++){
-		for(int j = 0; j <= forme.n; j++){		
-			forme.summits[i][j] = bend(forme.summits[i][j], k, alpha);	
+
+ 	int m = forme.m;
+ 	int n = forme.n;
+	for(int i = 0; i <= m; i++){
+		for(int j = 0; j <= n; j++){		
+			forme.summits[i*n+j] = bend(forme.summits[i*n+j], k, alpha);	
 		}
 	}
 
@@ -80,11 +86,14 @@ int twist_forme(superquadrics forme){
 		return -1;		
  	}
 
- 	float n = forme.nt;
+ 	float nt = forme.nt;
  	float a1 = forme.a1;
-	for(int i = 0; i <= forme.m; i++){
-		for(int j = 0; j <= forme.n; j++){		
-			forme.summits[i][j] = twist(forme.summits[i][j], n, a1);	
+ 	
+ 	int m = forme.m;
+ 	int n = forme.n;
+	for(int i = 0; i <= m; i++){
+		for(int j = 0; j <= n; j++){		
+			forme.summits[i*n+j] = twist(forme.summits[i*n+j], nt, a1);	
 		}
 	}
 
@@ -112,9 +121,12 @@ int reverse_taper_forme(superquadrics forme){
 	float kx = forme.kx;
 	float ky = forme.ky;
 	float a3 = forme.a3;
-	for(int i = 0; i <= forme.m; i++){
-		for(int j = 0; j <= forme.n; j++){
-			forme.summits[i][j] = reverse_taper(forme.summits[i][j], kx, ky, a3);
+
+ 	int m = forme.m;
+ 	int n = forme.n;
+	for(int i = 0; i <= m; i++){
+		for(int j = 0; j <= n; j++){
+			forme.summits[i*n+j] = reverse_taper(forme.summits[i*n+j], kx, ky, a3);
 		}
 	}
 
@@ -127,8 +139,10 @@ int reverse_bend_forme(superquadrics forme){
 		return -1;		
  	}
 
-	for(int i = 0; i <= forme.m; i++){
-		for(int j = 0; j <= forme.n; j++){
+ 	int m = forme.m;
+ 	int n = forme.n;
+	for(int i = 0; i <= m; i++){
+		for(int j = 0; j <= n; j++){
 
 		}
 	}

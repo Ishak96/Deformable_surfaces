@@ -61,7 +61,7 @@ void display(void){
 		bend_control = 0;
 	}
 
-	draw_debug(forme.summits, forme.m, forme.n);
+	draw_debug(forme);
 
 	glPopMatrix();
 	glFlush();
@@ -85,9 +85,9 @@ int main(int argc, char** argv){
 	r0_t = atof(argv[6]);
 	r1_t = atof(argv[7]);
 
-	forme.m = 35.f;
-	forme.n = 35.f;
-	forme.summits = summit_building(a_t, b_t, c_t, p_t, q_t, forme.m, forme.n, r0_t, r1_t, 
+	forme.m = 35;
+	forme.n = 35;
+	forme = create_superquadrics(a_t, b_t, c_t, p_t, q_t, forme.m, forme.n, r0_t, r1_t, 
 									-PI / 2, PI / 2, -PI, PI);
 
 	glutInit(&argc, argv);

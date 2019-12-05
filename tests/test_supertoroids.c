@@ -6,10 +6,10 @@ extern float xrot, yrot;
 extern float zoom_x, zoom_y;
 
 //global variables
-double m_t = 15.f;
-double n_t = 15.f;
+int m_t = 15;
+int n_t = 15;
 double a_t,b_t,c_t,p_t,q_t,r0_t,r1_t;
-summit** sum_t;
+superquadrics forme;
 
 void init(void){
 	glClearColor(0, 0, 0, 0);
@@ -45,9 +45,9 @@ void display(void){
 	glRotatef(yrot, 0.0f, 1.0f, 0.0f);
 
 	glPushMatrix();
-		sum_t = summit_building(a_t, b_t, c_t, p_t, q_t, m_t, n_t, r0_t, r1_t
+		forme = create_superquadrics(a_t, b_t, c_t, p_t, q_t, m_t, n_t, r0_t, r1_t
 								, -PI, PI, -PI, PI);
-		draw_superquadrics(sum_t, m_t, n_t);
+		draw_superquadrics(forme);
 
 	glPopMatrix();
 	glFlush();

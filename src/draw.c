@@ -1,33 +1,40 @@
 #include<draw.h>
 
-void draw_superquadrics(summit** sum, double m, double n){
+void draw_superquadrics(superquadrics forme){
 	glColor3f(r, g, b);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	
-	for(int i = 0; i <= (m-1); i++){
-		glBegin(GL_TRIANGLE_STRIP);
-		for(int j = 0; j <= (n-1); j++){
-				glVertex3f(sum[i][j].x,sum[i][j].y,sum[i][j].z);
-				glVertex3f(sum[i+1][j].x,sum[i+1][j].y,sum[i+1][j].z);
-				glVertex3f(sum[i+1][j+1].x,sum[i+1][j+1].y,sum[i+1][j+1].z);
+	int m = forme.m;
+	int n = forme.n;
+	summit* sum = forme.summits;
 
-				glVertex3f(sum[i][j].x,sum[i][j].y,sum[i][j].z);
-				glVertex3f(sum[i+1][j+1].x,sum[i+1][j+1].y,sum[i+1][j+1].z);
-				glVertex3f(sum[i][j+1].x,sum[i][j+1].y,sum[i][j+1].z);
+	for(int i = 0; i <= m-1; i++){
+		glBegin(GL_TRIANGLE_STRIP);
+		for(int j = 0; j <= n-1; j++){
+				glVertex3f(sum[i*n+j].x,sum[i*n+j].y,sum[i*n+j].z);
+				glVertex3f(sum[(i+1)*n+j].x,sum[(i+1)*n+j].y,sum[(i+1)*n+j].z);
+				glVertex3f(sum[(i+1)*n+(j+1)].x,sum[(i+1)*n+(j+1)].y,sum[(i+1)*n+(j+1)].z);
+
+				glVertex3f(sum[i*n+j].x,sum[i*n+j].y,sum[i*n+j].z);
+				glVertex3f(sum[(i+1)*n+(j+1)].x,sum[(i+1)*n+(j+1)].y,sum[(i+1)*n+(j+1)].z);
+				glVertex3f(sum[i*n+(j+1)].x,sum[i*n+(j+1)].y,sum[i*n+(j+1)].z);
 		}
 		glEnd();
 	}
 }
 
-void draw_debug(summit** sum, double m, double n){
+void draw_debug(superquadrics forme){
 	glColor3f(r, g, b);
 	glPointSize(2);
 	glBegin(GL_POINTS);
 	
+	int m = forme.m;
+	int n = forme.n;
+	summit* sum = forme.summits;
 	for(int i = 0; i <= (m-1); i++){
 		glBegin(GL_TRIANGLE_STRIP);
 		for(int j = 0; j <= (n-1); j++){
-				glVertex3f(sum[i][j].x,sum[i][j].y,sum[i][j].z);
+				glVertex3f(sum[i*n+j].x,sum[i*n+j].y,sum[i*n+j].z);
 		}
 	}
 	glEnd();
