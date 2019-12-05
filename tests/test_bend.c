@@ -61,7 +61,7 @@ void display(void){
 		bend_control = 0;
 	}
 
-	draw_debug(forme);
+	draw_superquadrics(forme);
 
 	glPopMatrix();
 	glFlush();
@@ -85,8 +85,8 @@ int main(int argc, char** argv){
 	r0_t = atof(argv[6]);
 	r1_t = atof(argv[7]);
 
-	forme.m = 35;
-	forme.n = 35;
+	forme.m = 15;
+	forme.n = 15;
 	forme = create_superquadrics(a_t, b_t, c_t, p_t, q_t, forme.m, forme.n, r0_t, r1_t, 
 									-PI / 2, PI / 2, -PI, PI);
 

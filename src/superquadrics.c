@@ -3,42 +3,36 @@
 #include <stdio.h>
 #include <superquadrics.h>
 
-double sign(double x){
+float sign(float x){
 	return ( (x < 0) ? -1 : ( (x > 0) ? 1 : 0 ) );
 }
 
-double abs_(double x){
+float abs_(float x){
 	return sign(x) * x;
 }
 
-double fexp(double x, double p){
+float fexp(float x, float p){
 	return ( sign(x) * (pow(abs_(x), p)) );
 }
 
-int double_equals(double a1, double a2){
-	return a1 == a2;
-}
-
 int equals_summit(summit sum1, summit sum2){
-	return double_equals(sum1.x, sum2.x) 
-			&& double_equals(sum1.y, sum2.y) 
-			&& double_equals(sum1.z, sum2.z);
+	return sum1.x == sum2.x 
+			&& sum1.y == sum2.y 
+			&& sum1.z == sum2.z;
 }
 
-int find_summit(summit* sum, int i, int j, int n, summit sum_find){
+int find_summit(summit* sum, int n, summit sum_find){
 	int find = 0;
 	
-	for(int temp_i = 0; temp_i < i && !find; temp_i++){
-		for(int temp_j = 0; temp_j < j && !find; temp_j++){
-			summit sum_at = sum[temp_i*n+temp_j];
-			find = equals_summit(sum_find, sum_at);
-		}
+	for(int i = 0; i < n && !find; i++){
+		summit sum_at = sum[i];
+		find = equals_summit(sum_find, sum_at);
 	}
 
 	return find;
 }
 
-summit func_eval(double a, double b, double c, double e1, double e2, double phi, double theta, double r0, double r1){
+summit func_eval(float a, float b, float c, float e1, float e2, float phi, float theta, float r0, float r1){
 	summit coordinates;
 
 	coordinates.x = a * (r0 + r1 * fexp(cos(phi), e1)) * (fexp(cos(theta), e2));
@@ -48,30 +42,49 @@ summit func_eval(double a, double b, double c, double e1, double e2, double phi,
 	return coordinates;
 }
 
-void summit_building(double a, double b, double c, double e1, double e2, int m, int n, 
-						 double r0, double r1, double a_p, double b_p, double a_t, double b_t,
+void summit_building(float a, float b, float c, float e1, float e2, int m, int n, 
+						 float r0, float r1, float a_p, float b_p, float a_t, float b_t,
 						 superquadrics* forme){
 	int nb_sum = 0;
-	int size = (m+1) * (n+1);
 	
-	forme->summits = malloc(size * sizeof(summit));
+	forme->summits = (summit *)malloc((m+1) * (n+1) * sizeof(summit));
 
 	for(int i = 0; i <= m; i++){
 		for(int j = 0; j <= n; j++){
-			float phi = a_p + ((double)i * (b_p - a_p)) / m;
-			float theta = a_t + ((double)j * (b_t - a_t)) / n;
+			float phi = a_p + (i * (b_p - a_p)) / m;
+			float theta = a_t + (j * (b_t - a_t)) / n;
 
 			summit sum_add = func_eval(a, b, c, e1, e2, phi, theta, r0, r1);
-			forme->summits[i*(n+1)+j] = sum_add;
-			nb_sum++;
+			if(!find_summit(forme->summits, nb_sum, sum_add)){
+				forme->summits[i*(n+1)+j] = sum_add;
+				nb_sum++;
+			}
 		}
 	}
 
-	forme->size = nb_sum;
+	forme->size = (m*n)*2;
+	forme->facade = malloc(forme->size * sizeof(int *));
+	for(int i = 0; i <= forme->size; i++)
+		forme->facade[i] = malloc(3*sizeof(int));
+
+	int facade_index = 0;
+	for(int i = 0; i < m; i++){
+		for(int j = 0; j < n; j++){
+			forme->facade[facade_index][0] = i*(n+1)+j;
+			forme->facade[facade_index][1] = (i+1)*(n+1)+j;
+			forme->facade[facade_index][2] = (i+1)*(n+1)+(j+1);
+			facade_index++;
+			
+			forme->facade[facade_index][0] = i*(n+1)+j;
+			forme->facade[facade_index][1] = (i+1)*(n+1)+(j+1);
+			forme->facade[facade_index][2] = i*(n+1)+(j+1);
+			facade_index++;
+		}
+	}
 }
 
-superquadrics create_superquadrics(double a, double b, double c, double e1, double e2, int m, int n, 
-									double r0, double r1, double a_p, double b_p, double a_t, double b_t){
+superquadrics create_superquadrics(float a, float b, float c, float e1, float e2, int m, int n, 
+									float r0, float r1, float a_p, float b_p, float a_t, float b_t){
 	superquadrics forme;
 
 	forme.a1 = a;

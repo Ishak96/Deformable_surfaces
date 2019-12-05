@@ -12,6 +12,7 @@ summit taper(summit sum, float kx, float ky, float a3){
 	return sum_result;
 }
 
+// fonction qui calcul la courbure d'un point 3D
 summit bend(summit sum, float k, float alpha){
 	float beta = atan(sum.y / sum.x);
 	float gama = sum.z / k;
@@ -51,8 +52,8 @@ int taper_forme(superquadrics forme){
 
  	int m = forme.m;
  	int n = forme.n;
-	for(int i = 0; i <= m; i++){
-		for(int j = 0; j <= n; j++){
+	for(int i = 0; i < m; i++){
+		for(int j = 0; j < n; j++){
 			forme.summits[i*n+j] = taper(forme.summits[i*n+j], kx, ky, a3);
 		}
 	}
@@ -71,8 +72,8 @@ int bend_forme(superquadrics forme){
 
  	int m = forme.m;
  	int n = forme.n;
-	for(int i = 0; i <= m; i++){
-		for(int j = 0; j <= n; j++){		
+	for(int i = 0; i < m; i++){
+		for(int j = 0; j < n; j++){		
 			forme.summits[i*n+j] = bend(forme.summits[i*n+j], k, alpha);	
 		}
 	}
@@ -91,8 +92,8 @@ int twist_forme(superquadrics forme){
  	
  	int m = forme.m;
  	int n = forme.n;
-	for(int i = 0; i <= m; i++){
-		for(int j = 0; j <= n; j++){		
+	for(int i = 0; i < m; i++){
+		for(int j = 0; j < n; j++){		
 			forme.summits[i*n+j] = twist(forme.summits[i*n+j], nt, a1);	
 		}
 	}
@@ -124,8 +125,8 @@ int reverse_taper_forme(superquadrics forme){
 
  	int m = forme.m;
  	int n = forme.n;
-	for(int i = 0; i <= m; i++){
-		for(int j = 0; j <= n; j++){
+	for(int i = 0; i < m; i++){
+		for(int j = 0; j < n; j++){
 			forme.summits[i*n+j] = reverse_taper(forme.summits[i*n+j], kx, ky, a3);
 		}
 	}
@@ -133,6 +134,7 @@ int reverse_taper_forme(superquadrics forme){
  	return 0;
 }
 
+//a faire [TODO]
 int reverse_bend_forme(superquadrics forme){
  	if(forme.summits == NULL){
  		fprintf(stderr, "reverse_bend: invalid argument!\n");
@@ -141,8 +143,8 @@ int reverse_bend_forme(superquadrics forme){
 
  	int m = forme.m;
  	int n = forme.n;
-	for(int i = 0; i <= m; i++){
-		for(int j = 0; j <= n; j++){
+	for(int i = 0; i < m; i++){
+		for(int j = 0; j < n; j++){
 
 		}
 	}

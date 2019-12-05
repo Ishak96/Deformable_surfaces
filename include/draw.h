@@ -18,8 +18,8 @@
 
 void draw_superquadrics(superquadrics forme);
 void draw_debug(superquadrics forme);
-void DrawEllipsoid(unsigned int uiStacks, unsigned int uiSlices, double fA, double fB, double fC, double e1, double e2);
-void DrawEllipsoid_cloud(unsigned int uiStacks, unsigned int uiSlices, double fA, double fB, double fC, double e1, double e2);
+void DrawEllipsoid(unsigned int uiStacks, unsigned int uiSlices, float fA, float fB, float fC, float e1, float e2);
+void DrawEllipsoid_cloud(unsigned int uiStacks, unsigned int uiSlices, float fA, float fB, float fC, float e1, float e2);
 void draw_cloud_point(float** cloud, int size, float* color);
 int getRootWindowSize(int *w, int *h);
 int getScreenSize(int *w, int*h);

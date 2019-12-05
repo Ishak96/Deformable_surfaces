@@ -6,7 +6,7 @@ extern float xrot, yrot;
 extern float zoom_x, zoom_y;
 extern int taper_control;
 //global variables
-double a_t,b_t,c_t,p_t,q_t,r0_t,r1_t;
+float a_t,b_t,c_t,p_t,q_t,r0_t,r1_t;
 extern float kx, ky;
 
 superquadrics forme;
@@ -89,7 +89,7 @@ int main(int argc, char** argv){
 	forme.m = 15;
 	forme.n = 15;
 	forme = create_superquadrics(a_t, b_t, c_t, p_t, q_t, forme.m, forme.n, r0_t, r1_t
-									, -PI, PI, -PI, PI);
+									, -PI / 2, PI / 2, -PI, PI);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);

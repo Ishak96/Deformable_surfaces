@@ -68,16 +68,16 @@ float** get_cloud_point(const char* file_name, int* size, float fact){
 	return cloud;
 }
 
-float** generate_cloud_point(unsigned int uiStacks, unsigned int uiSlices, double fA, double fB, 
-							double fC, double e1, double e2, int* size, int xo, int yo, int zo, double r0, double r1){
-	double tStep = (PI) / (double)uiSlices;
-	double sStep = (PI) / (double)uiStacks;
+float** generate_cloud_point(unsigned int uiStacks, unsigned int uiSlices, float fA, float fB, 
+							float fC, float e1, float e2, int* size, int xo, int yo, int zo, float r0, float r1){
+	float tStep = (PI) / (float)uiSlices;
+	float sStep = (PI) / (float)uiStacks;
 	
 	int size_tmp = 0;
 
-	for(double t = -PI; t <= (PI)+.0001; t += tStep)
+	for(float t = -PI; t <= (PI)+.0001; t += tStep)
 	{
-		for(double s = -PI; s <= PI+.0001; s += sStep)
+		for(float s = -PI; s <= PI+.0001; s += sStep)
 		{
 			size_tmp+=2;
 		}
@@ -90,9 +90,9 @@ float** generate_cloud_point(unsigned int uiStacks, unsigned int uiSlices, doubl
 
 	*size = size_tmp;
 	size_tmp = 0;
-	for(double t = -PI; t <= (PI)+.0001; t += tStep)
+	for(float t = -PI; t <= (PI)+.0001; t += tStep)
 	{
-		for(double s = -PI; s <= PI+.0001; s += sStep)
+		for(float s = -PI; s <= PI+.0001; s += sStep)
 		{
 			cloud[size_tmp][0] = fA * (r0 + r1 * fexp(cos(t), e1)) * fexp(cos(s), e2) + xo;
 			cloud[size_tmp][1] = fB * (r0 + r1 *fexp(cos(t), e1)) * fexp(sin(s), e2) + yo;
