@@ -45,8 +45,8 @@ void display(void){
 	glRotatef(yrot, 0.0f, 1.0f, 0.0f);
 
 	glPushMatrix();
-		double** values = discretization(-PI, PI, -PI, PI, m_t, n_t);
-		sum_t = summit_building(a_t, b_t, c_t, p_t, q_t, m_t, n_t, values, r0_t, r1_t);
+		sum_t = summit_building(a_t, b_t, c_t, p_t, q_t, m_t, n_t, r0_t, r1_t
+								, -PI, PI, -PI, PI);
 		draw_superquadrics(sum_t, m_t, n_t);
 
 	glPopMatrix();
@@ -85,7 +85,6 @@ int main(int argc, char** argv){
 	glutMouseFunc(camera_mouse);
 	glutMotionFunc(camera_mouseMotion);
 	glutKeyboardFunc(camera_keyboard);
-	//glutIdleFunc(camera_idle);
 
 	glutMainLoop();
 	return 0;

@@ -87,8 +87,8 @@ int main(int argc, char** argv){
 
 	forme.m = 35.f;
 	forme.n = 35.f;
-	double** values = discretization(-PI / 2, PI / 2, -PI, PI, forme.m, forme.n);
-	forme.summits = summit_building(a_t, b_t, c_t, p_t, q_t, forme.m, forme.n, values, r0_t, r1_t);
+	forme.summits = summit_building(a_t, b_t, c_t, p_t, q_t, forme.m, forme.n, r0_t, r1_t, 
+									-PI / 2, PI / 2, -PI, PI);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
