@@ -40,14 +40,14 @@ summit twist(summit sum, float n, float a1){
 }
 
 int taper_forme(superquadrics forme){
- 	if(forme.summits == NULL || forme.parameters == NULL){
+ 	if(forme.summits == NULL){
  		fprintf(stderr, "taper: invalid argument!\n");
 		return -1;		
  	}
 
-	float kx = forme.parameters[11];
-	float ky = forme.parameters[12];
-	float a3 = forme.parameters[10];
+	float kx = forme.kx;
+	float ky = forme.ky;
+	float a3 = forme.a3;
 	for(int i = 0; i <= forme.m; i++){
 		for(int j = 0; j <= forme.n; j++){
 			forme.summits[i][j] = taper(forme.summits[i][j], kx, ky, a3);
@@ -58,13 +58,13 @@ int taper_forme(superquadrics forme){
 }
 
 int bend_forme(superquadrics forme){
- 	if(forme.summits == NULL || forme.parameters == NULL){
+ 	if(forme.summits == NULL){
  		fprintf(stderr, "bend: invalid argument!\n");
 		return -1;		
  	}
 
- 	float k = forme.parameters[13];
- 	float alpha = forme.parameters[14];
+ 	float k = forme.k;
+ 	float alpha = forme.alpha;
 	for(int i = 0; i <= forme.m; i++){
 		for(int j = 0; j <= forme.n; j++){		
 			forme.summits[i][j] = bend(forme.summits[i][j], k, alpha);	
@@ -75,13 +75,13 @@ int bend_forme(superquadrics forme){
 }
 
 int twist_forme(superquadrics forme){
- 	if(forme.summits == NULL || forme.parameters == NULL){
+ 	if(forme.summits == NULL){
  		fprintf(stderr, "bend: invalid argument!\n");
 		return -1;		
  	}
 
- 	float n = forme.parameters[15];
- 	float a1 = forme.parameters[8];
+ 	float n = forme.nt;
+ 	float a1 = forme.a1;
 	for(int i = 0; i <= forme.m; i++){
 		for(int j = 0; j <= forme.n; j++){		
 			forme.summits[i][j] = twist(forme.summits[i][j], n, a1);	
@@ -104,14 +104,14 @@ summit reverse_taper(summit sum, float kx, float ky, float a3){
 }
 
 int reverse_taper_forme(superquadrics forme){
- 	if(forme.summits == NULL || forme.parameters == NULL){
+ 	if(forme.summits == NULL){
  		fprintf(stderr, "reverse_taper: invalid argument!\n");
 		return -1;		
  	}
 
-	float kx = forme.parameters[11];
-	float ky = forme.parameters[12];
-	float a3 = forme.parameters[10];
+	float kx = forme.kx;
+	float ky = forme.ky;
+	float a3 = forme.a3;
 	for(int i = 0; i <= forme.m; i++){
 		for(int j = 0; j <= forme.n; j++){
 			forme.summits[i][j] = reverse_taper(forme.summits[i][j], kx, ky, a3);
@@ -122,7 +122,7 @@ int reverse_taper_forme(superquadrics forme){
 }
 
 int reverse_bend_forme(superquadrics forme){
- 	if(forme.summits == NULL || forme.parameters == NULL){
+ 	if(forme.summits == NULL){
  		fprintf(stderr, "reverse_bend: invalid argument!\n");
 		return -1;		
  	}

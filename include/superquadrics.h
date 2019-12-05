@@ -11,10 +11,16 @@ typedef struct {
 }summit;
 
 typedef struct{
-	float parameters[16];
+	float a1, a2, a3;
+	float e1, e2;
+	float tx, ty, tz;
+	float abgle1, angle2, angle3;
+	float r0, r1;
+	float kx, ky;
+	float alpha, k;
+	float nt;
 	summit** summits;
-	float m;
-	float n;
+	float m, n;
 }superquadrics;
 
 double sign(double x);

@@ -47,7 +47,7 @@ void display(void){
 	glPushMatrix();
 	
 	if(twist_control == 1){
-		forme.parameters[15] = n;
+		forme.nt = n;
 		if(twist_forme(forme) < 0){
 			fprintf(stderr, "bed test_taper: invalid argument!\n");
 		}
@@ -82,7 +82,7 @@ int main(int argc, char** argv){
 	forme.n = 15.f;
 	double** values = discretization(-PI, PI, -PI, PI, forme.m, forme.n);
 	forme.summits = summit_building(a_t, b_t, c_t, p_t, q_t, forme.m, forme.n, values, r0_t, r1_t);
-	forme.parameters[8] = a_t;
+	forme.a1 = a_t;
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);

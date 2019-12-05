@@ -47,8 +47,8 @@ void display(void){
 	glPushMatrix();
 	
 	if(bend_control == 1){
-		forme.parameters[13] = k;
-		forme.parameters[14] = alpha;
+		forme.k = k;
+		forme.alpha = alpha;
 		if(bend_forme(forme) < 0){
 			fprintf(stderr, "bed test_taper: invalid argument!\n");
 		}

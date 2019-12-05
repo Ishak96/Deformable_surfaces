@@ -47,8 +47,8 @@ void display(void){
 	glPushMatrix();
 	
 	if(taper_control == 1){
-		forme.parameters[11] = kx;
-		forme.parameters[12] = ky;
+		forme.kx = kx;
+		forme.ky = ky;
 		if(taper_forme(forme) < 0){
 			fprintf(stderr, "bed test_taper: invalid argument!\n");
 		}
@@ -85,7 +85,7 @@ int main(int argc, char** argv){
 	r0_t = atof(argv[6]);
 	r1_t = atof(argv[7]);
 
-	forme.parameters[10] = c_t;
+	forme.a3 = c_t;
 	forme.m = 15.f;
 	forme.n = 15.f;
 	double** values = discretization(-PI, PI, -PI, PI, forme.m, forme.n);
