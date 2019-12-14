@@ -1,15 +1,51 @@
-#include<draw.h>
+#include <draw.h>
 #include <camera.h>
+#include <util.h>
+#include <deformation.h>
 #include <stdio.h>
 
 extern float xrot, yrot;
 extern float zoom_x, zoom_y;
 
 //global variables
-int m_t = 15;
-int n_t = 15;
-double a_t,b_t,c_t,p_t,q_t,r0_t,r1_t;
-superquadrics forme;
+SUPERQUADRIC superquadric;
+
+extern float kx, ky, k, alpha, n;
+extern int deformation_control;
+
+void type_DEFORMATION(){
+	switch (deformation_control){
+		//taper deformation
+		case 1:
+			superquadric.parameters.kx = kx;
+			superquadric.parameters.ky = ky;
+			taper_SUPERQUADRIC(superquadric);
+			break;
+		
+		//twist deformation
+		case 2:
+			superquadric.parameters.nt = n;
+			twist_SUPERQUADRIC(superquadric);
+			break;
+		
+		//bend deformation
+		case 3:
+			superquadric.parameters.alpha = alpha;
+			superquadric.parameters.k = k;
+			bend_SUPERQUADRIC(superquadric);
+			break;
+		
+		//the reverse of tapering
+		case -1:
+			reverse_taper_SUPERQUADRIC(superquadric);
+			break;
+		//the reverse of bending
+		case -3:
+			reverse_bend_SUPERQUADRIC(superquadric);
+			break;
+	}
+	deformation_control = 0;
+}
 
 void init(void){
 	glClearColor(0, 0, 0, 0);
@@ -45,31 +81,38 @@ void display(void){
 	glRotatef(yrot, 0.0f, 1.0f, 0.0f);
 
 	glPushMatrix();
-		forme = create_superquadrics(a_t, b_t, c_t, p_t, q_t, m_t, n_t, r0_t, r1_t
-								, -PI, PI, -PI, PI);
-		draw_superquadrics(forme);
-
+		type_DEFORMATION();
+		draw_SUPERQUADRIC(superquadric);
 	glPopMatrix();
+	
 	glFlush();
 	glutSwapBuffers();
 }
 
 int main(int argc, char** argv){
 
-	if(argc < 8){
+	if(argc < 6){
 		fprintf(stderr, "main: invalid argument!\n");
-		printf("usage: %s [a] [b] [c] [e1] [e2] [r0] [r1]..\n", argv[0]);
-		printf("give r0 = 0 and r1 = 1 to gener a normal superquadrics\n");
+		printf("usage: %s [a] [b] [c] [e1] [e2]\n", argv[0]);
 		return -1;
 	}
 
-	a_t = atof(argv[1]);
-	b_t = atof(argv[2]);
-	c_t = atof(argv[3]);
-	p_t = atof(argv[4]);
-	q_t = atof(argv[5]);
-	r0_t = atof(argv[6]);
-	r1_t = atof(argv[7]);
+	int parallels = 20;
+	int meridians = 20;
+
+	float a = atof(argv[1]);
+	float b = atof(argv[2]);
+	float c = atof(argv[3]);
+	float e1 = atof(argv[4]);
+	float e2 = atof(argv[5]);
+
+	float phi[2];
+	float theta[2];
+	default_PHIvect_THETAvect(phi, theta);	
+
+	superquadric = create_superquadrics(a, b, c, e1, e2,
+								  		parallels, meridians,
+								  		phi, theta);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);

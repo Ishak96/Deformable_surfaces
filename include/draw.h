@@ -11,13 +11,13 @@
 #include <X11/Xlib.h>
 #include <stdio.h>
 
-#define r 1
-#define g 1
-#define b 1
+#define R_C 1
+#define G_C 1
+#define B_C 1
 #define POINTS_SIZE 2
 
-void draw_superquadrics(superquadrics forme);
-void draw_debug(superquadrics forme);
+void draw_SUPERQUADRIC(SUPERQUADRIC superquadric);
+void draw_debug(SUPERQUADRIC superquadric);
 void DrawEllipsoid(unsigned int uiStacks, unsigned int uiSlices, float fA, float fB, float fC, float e1, float e2);
 void DrawEllipsoid_cloud(unsigned int uiStacks, unsigned int uiSlices, float fA, float fB, float fC, float e1, float e2);
 void draw_cloud_point(float** cloud, int size, float* color);

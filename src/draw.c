@@ -1,42 +1,41 @@
 #include<draw.h>
 
-void draw_superquadrics(superquadrics forme){
-	glColor3f(r, g, b);
+void draw_SUPERQUADRIC(SUPERQUADRIC superquadric){
+	glColor3f(R_C, G_C, B_C);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	summit* sum = forme.summits;
-	int** facade = forme.facade;
-	int size = forme.size;
+	SUMMIT* sum = superquadric.summits;
+	int** fac = superquadric.facades;
 
-	for(int i = 0; i < size-1; i+=2){
-		glBegin(GL_TRIANGLE_STRIP);
-			glVertex3f(sum[facade[i][0]].x,sum[facade[i][0]].y,sum[facade[i][0]].z);
-			glVertex3f(sum[facade[i][1]].x,sum[facade[i][1]].y,sum[facade[i][1]].z);
-			glVertex3f(sum[facade[i][2]].x,sum[facade[i][2]].y,sum[facade[i][2]].z);
-
-			glVertex3f(sum[facade[i+1][0]].x,sum[facade[i+1][0]].y,sum[facade[i+1][0]].z);
-			glVertex3f(sum[facade[i+1][1]].x,sum[facade[i+1][1]].y,sum[facade[i+1][1]].z);
-			glVertex3f(sum[facade[i+1][2]].x,sum[facade[i+1][2]].y,sum[facade[i+1][2]].z);
-		glEnd();
+	for(int i = 0; i < superquadric.size_facades; i++){
+		int summit_size = superquadric.facades[i][0];
+		if(summit_size == 3){
+			glBegin(GL_TRIANGLE_STRIP);
+				glVertex3f(sum[fac[i][1]].x,sum[fac[i][1]].y,sum[fac[i][1]].z);
+				glVertex3f(sum[fac[i][2]].x,sum[fac[i][2]].y,sum[fac[i][2]].z);
+				glVertex3f(sum[fac[i][3]].x,sum[fac[i][3]].y,sum[fac[i][3]].z);				
+			glEnd();
+		}
+		else{
+			glBegin(GL_QUADS);
+				glVertex3f(sum[fac[i][1]].x,sum[fac[i][1]].y,sum[fac[i][1]].z);
+				glVertex3f(sum[fac[i][2]].x,sum[fac[i][2]].y,sum[fac[i][2]].z);
+				glVertex3f(sum[fac[i][3]].x,sum[fac[i][3]].y,sum[fac[i][3]].z);
+				glVertex3f(sum[fac[i][4]].x,sum[fac[i][4]].y,sum[fac[i][4]].z);
+			glEnd();
+		}
 	}
 }
 
-void draw_debug(superquadrics forme){
-	glColor3f(r, g, b);
+void draw_debug(SUPERQUADRIC superquadric){
+	glColor3f(R_C, G_C, B_C);
 	glPointSize(2);
-	
+
+	SUMMIT* sum = superquadric.summits;
+
 	glBegin(GL_POINTS);
-	
-	summit* sum = forme.summits;
-	int** facade = forme.facade;
-	int size = forme.size;
-
-	for(int i = 0; i < size; i++){
-		glVertex3f(sum[facade[i][0]].x,sum[facade[i][0]].y,sum[facade[i][0]].z);
-		glVertex3f(sum[facade[i][1]].x,sum[facade[i][1]].y,sum[facade[i][1]].z);
-		glVertex3f(sum[facade[i][2]].x,sum[facade[i][2]].y,sum[facade[i][2]].z);
-	}
-
+		for(int i = 0; i < superquadric.size_summits; i++)
+			glVertex3f(sum[i].x,sum[i].y,sum[i].z);
 	glEnd();
 }
 
@@ -44,7 +43,7 @@ void DrawEllipsoid(unsigned int uiStacks, unsigned int uiSlices, float fA, float
 	float tStep = (PI) / (float)uiSlices;
 	float sStep = (PI) / (float)uiStacks;
 	
-	glColor3f(r, g, b);
+	glColor3f(R_C, G_C, B_C);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	for(float t = -PI; t <= (PI)+.0001; t += tStep)
 	{
@@ -62,7 +61,7 @@ void DrawEllipsoid_cloud(unsigned int uiStacks, unsigned int uiSlices, float fA,
 	float tStep = (PI) / (float)uiSlices;
 	float sStep = (PI) / (float)uiStacks;
 	
-	glColor3f(r, g, b);
+	glColor3f(R_C, G_C, B_C);
 	glPointSize(2);
 	glBegin(GL_POINTS);
 	for(float t = -PI; t <= (PI)+.0001; t += tStep)

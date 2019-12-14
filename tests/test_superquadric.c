@@ -1,20 +1,13 @@
-#include<draw.h>
+#include <draw.h>
 #include <camera.h>
-#include <cloud.h>
+#include <util.h>
 #include <stdio.h>
 
 extern float xrot, yrot;
 extern float zoom_x, zoom_y;
 
 //global variables
-double a_t,b_t,c_t,e1_t,e2_t,r0_t,r1_t;
-float** cloud;
-int size = 0;
-int xo = 0;
-int yo = 0;
-int zo = 0;
-
-GLfloat angle = 90;
+SUPERQUADRIC superquadric;
 
 void init(void){
 	glClearColor(0, 0, 0, 0);
@@ -50,41 +43,42 @@ void display(void){
 	glRotatef(yrot, 0.0f, 1.0f, 0.0f);
 
 	glPushMatrix();
-
-	if(size == 0)
-		cloud = generate_cloud_point(70, 70, a_t, b_t, c_t, e1_t, e2_t, &size, xo, yo, zo, r0_t, r1_t);
-	
-	float color[3] = {1.0, 1.0, 1.0};
-	draw_cloud_point(cloud, size, color);
-
+		draw_SUPERQUADRIC(superquadric);
 	glPopMatrix();
+	
 	glFlush();
 	glutSwapBuffers();
 }
 
 int main(int argc, char** argv){
-	int H, W;
-	getScreenSize(&H, &W);
 
-	if(argc < 8){
+	if(argc < 6){
 		fprintf(stderr, "main: invalid argument!\n");
-		printf("usage: %s [a] [b] [c] [e1] [e2] [r0] [r1]..\n", argv[0]);
-		printf("give r0 = 0 and r1 = 1 to gener a normal superquadrics\n");
+		printf("usage: %s [a] [b] [c] [e1] [e2]\n", argv[0]);
 		return -1;
 	}
 
-	a_t = atof(argv[1]);
-	b_t = atof(argv[2]);
-	c_t = atof(argv[3]);
-	e1_t = atof(argv[4]);
-	e2_t = atof(argv[5]);
-	r0_t = atof(argv[6]);
-	r1_t = atof(argv[7]);
+	int parallels = 20;
+	int meridians = 20;
+
+	float a = atof(argv[1]);
+	float b = atof(argv[2]);
+	float c = atof(argv[3]);
+	float e1 = atof(argv[4]);
+	float e2 = atof(argv[5]);
+
+	float phi[2];
+	float theta[2];
+	default_PHIvect_THETAvect(phi, theta);	
+
+	superquadric = create_superquadrics(a, b, c, e1, e2,
+								  		parallels, meridians,
+								  		phi, theta);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(H, W);
-	glutInitWindowPosition(400, 35);
+	glutInitWindowSize(800, 800);
+	glutInitWindowPosition(50, 50);
 	glutCreateWindow("superquadrics modelization");
 
 	init();

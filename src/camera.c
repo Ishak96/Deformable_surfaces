@@ -16,9 +16,7 @@ float zoom_y = 0.0;
 
 int aff = 1;
 
-int taper_control = 0;
-int bend_control = 0;
-int twist_control = 0;
+int deformation_control = 0;
 
 float kx, ky, k, alpha, n;
 
@@ -85,12 +83,12 @@ void camera_keyboard(unsigned char key, int x, int y){
 			printf("1)twist or 2)taper:\n");
 			scanf("%d", &select);
 			if(select == 1){
-				twist_control = 1;
+				deformation_control = 2;
 				printf("\nentre n:");
 				scanf("%f", &n);
 			}
 			else{
-				taper_control = 1;
+				deformation_control = 1;
 				printf("\nentre kx:");
 				scanf("%f", &kx);
 				printf("\nentre ky:");
@@ -98,15 +96,16 @@ void camera_keyboard(unsigned char key, int x, int y){
 			}
 			break;
 		case 'b':
-			bend_control = 1;
+			deformation_control = 3;
 			printf("\nentre k:");
 			scanf("%f", &k);
 			printf("\nentre alpha:");
 			scanf("%f", &alpha);
 			break;
 		case 'r':
-			taper_control = -1;
-			bend_control = -1;
+			printf("1)taper or 3)bend:\n");
+			scanf("%d", &select);
+			deformation_control = -select;
 			break;
 	};
 	glutPostRedisplay();

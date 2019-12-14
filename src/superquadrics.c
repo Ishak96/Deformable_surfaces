@@ -1,6 +1,7 @@
 #include<math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <util.h>
 #include <superquadrics.h>
 
 float sign(float x){
@@ -15,89 +16,166 @@ float fexp(float x, float p){
 	return ( sign(x) * (pow(abs_(x), p)) );
 }
 
-int equals_summit(summit sum1, summit sum2){
-	return sum1.x == sum2.x 
-			&& sum1.y == sum2.y 
-			&& sum1.z == sum2.z;
+int equals_summit(SUMMIT sum1, SUMMIT sum2){
+	float delta1 = sum1.x - sum2.x;
+	float delta2 = sum1.y - sum2.y;
+	float delta3 = sum1.z - sum2.z;
+	return 	   (delta1 >= -DELTA && delta1 <= DELTA)
+			&& (delta2 >= -DELTA && delta2 <= DELTA) 
+			&& (delta3 >= -DELTA && delta3 <= DELTA);
 }
 
-int find_summit(summit* sum, int n, summit sum_find){
-	int find = 0;
+SUMMIT func_eval(float a, float b, float c, float e1, float e2,
+				 float phi, float theta){
+	SUMMIT summit;
+
+	summit.x = a * (fexp(cos(phi), e1)) * (fexp(cos(theta), e2));
+	summit.y = b * (fexp(cos(phi), e1)) * (fexp(sin(theta), e2));
+	summit.z = c * (fexp(sin(phi), e1));
+
+	return summit;
+}
+
+SUMMIT create_SUMMIT(PARAMETERS parameters, float phi, float theta){
+	float a = parameters.a1;
+	float b = parameters.a2;
+	float c = parameters.a3;
+	float e1 = parameters.e1;
+	float e2 = parameters.e2;
+
+	return func_eval(a, b, c, e1, e2, phi, theta);
+}
+
+void summit_building(SUPERQUADRIC* superquadric, float phi[], float theta[]){
+	int lengthSummit = superquadric->size_summits;
+	int parallels = superquadric->parallels; 
+	int meridians = superquadric->meridians;
+
+	PARAMETERS parameters = superquadric->parameters;
+
+	SUMMIT* summits = allocSUMMITTable(lengthSummit);
+
+	float* Uvect = discretization(phi[0], phi[1], parallels);
+	float* Vvect = discretization(theta[0], theta[1], meridians);
+
+	int nSummits = 0;
+
+	/*South summit*/
+	float u = Uvect[0];
+	float v = Vvect[0];
+	summits[nSummits] = create_SUMMIT(parameters, u, v);
+	nSummits++;
 	
-	for(int i = 0; i < n && !find; i++){
-		summit sum_at = sum[i];
-		find = equals_summit(sum_find, sum_at);
-	}
-
-	return find;
-}
-
-summit func_eval(float a, float b, float c, float e1, float e2, float phi, float theta, float r0, float r1){
-	summit coordinates;
-
-	coordinates.x = a * (r0 + r1 * fexp(cos(phi), e1)) * (fexp(cos(theta), e2));
-	coordinates.y = b * (r0 + r1 * fexp(cos(phi), e1)) * (fexp(sin(theta), e2));
-	coordinates.z = c * (r1 * fexp(sin(phi), e1));
-
-	return coordinates;
-}
-
-void summit_building(float a, float b, float c, float e1, float e2, int m, int n, 
-						 float r0, float r1, float a_p, float b_p, float a_t, float b_t,
-						 superquadrics* forme){
-	int nb_sum = 0;
-	
-	forme->summits = (summit *)malloc((m+1) * (n+1) * sizeof(summit));
-
-	for(int i = 0; i <= m; i++){
-		for(int j = 0; j <= n; j++){
-			float phi = a_p + (i * (b_p - a_p)) / m;
-			float theta = a_t + (j * (b_t - a_t)) / n;
-
-			summit sum_add = func_eval(a, b, c, e1, e2, phi, theta, r0, r1);
-			if(!find_summit(forme->summits, nb_sum, sum_add)){
-				forme->summits[i*(n+1)+j] = sum_add;
-				nb_sum++;
-			}
+	for(int p = 1; p <= (parallels-2); p++){
+		u = Uvect[p];
+		for(int m = 0; m <= (meridians-2); m++){
+			/*Intermediate summit*/
+			v = Vvect[m];
+			summits[nSummits] = create_SUMMIT(parameters, u, v);
+			nSummits++;
 		}
 	}
 
-	forme->size = (m*n)*2;
-	forme->facade = malloc(forme->size * sizeof(int *));
-	for(int i = 0; i <= forme->size; i++)
-		forme->facade[i] = malloc(3*sizeof(int));
+	/*North summit*/
+	u = Uvect[parallels-1];
+	v = Vvect[0];
+	summits[nSummits] = create_SUMMIT(parameters, u, v);
+	nSummits++;
 
-	int facade_index = 0;
-	for(int i = 0; i < m; i++){
-		for(int j = 0; j < n; j++){
-			forme->facade[facade_index][0] = i*(n+1)+j;
-			forme->facade[facade_index][1] = (i+1)*(n+1)+j;
-			forme->facade[facade_index][2] = (i+1)*(n+1)+(j+1);
-			facade_index++;
-			
-			forme->facade[facade_index][0] = i*(n+1)+j;
-			forme->facade[facade_index][1] = (i+1)*(n+1)+(j+1);
-			forme->facade[facade_index][2] = i*(n+1)+(j+1);
-			facade_index++;
-		}
-	}
+
+	superquadric->summits = summits;
+	freeFloatTable(Uvect);
+	freeFloatTable(Vvect);
 }
 
-superquadrics create_superquadrics(float a, float b, float c, float e1, float e2, int m, int n, 
-									float r0, float r1, float a_p, float b_p, float a_t, float b_t){
-	superquadrics forme;
+void facade_building(SUPERQUADRIC* superquadric){
+	int lengthFacade = superquadric->size_facades;
+	int parallels = superquadric->parallels; 
+	int meridians = superquadric->meridians;
 
-	forme.a1 = a;
-	forme.a2 = b;
-	forme.a3 = c;
-	forme.e1 = e1;
-	forme.e2 = e2;
-	forme.r0 = r0;
-	forme.r1 = r1;
-	forme.m = m;
-	forme.n = n;
-	summit_building(a, b, c, e1, e2, m, n, r0, r1, a_p, b_p, a_t, b_t, &forme);
+	int** facades = allocIntMatrix(lengthFacade, NB_COLS_FACADES);
 
+	int nFacades = 0;
 
-	return forme;
+	/*Create south facades*/
+	for(int m = 1; m <= (meridians-2); m++){
+		facades[nFacades][0] = 3;
+		facades[nFacades][1] = 0;
+		facades[nFacades][2] = m+1;
+		facades[nFacades][3] = m;
+		nFacades++;
+	}
+	
+	facades[nFacades][0] = 3;
+	facades[nFacades][1] = 0;
+	facades[nFacades][2] = 1;
+	facades[nFacades][3] = meridians-1;
+	nFacades++;
+
+	/*Create intermediate facade*/
+	for(int p = 1; p <= (parallels-3); p++){
+		for(int m = 1; m <= (meridians-2); m++){
+			facades[nFacades][0] = 4;
+			facades[nFacades][1] = (p-1)*(meridians-1)+m;
+			facades[nFacades][2] = (p-1)*(meridians-1)+m+1;
+			facades[nFacades][3] = p*(meridians-1)+m+1;
+			facades[nFacades][4] = p*(meridians-1)+m;
+			nFacades++;		
+		}
+
+		facades[nFacades][0] = 4;
+		facades[nFacades][1] = p*(meridians-1);
+		facades[nFacades][2] = (p-1)*(meridians-1)+1;
+		facades[nFacades][3] = p*(meridians-1)+1;
+		facades[nFacades][4] = (p+1)*(meridians-1);
+		nFacades++;
+	}
+
+	/*Create north facades*/
+	for(int m = 1; m <= (meridians-2); m++){
+		facades[nFacades][0] = 3;
+		facades[nFacades][1] = (parallels-3)*(meridians-1)+m;
+		facades[nFacades][2] = (parallels-3)*(meridians-1)+m+1;
+		facades[nFacades][3] = (parallels-2)*(meridians-1)+1;
+		nFacades++;
+	}
+	
+	facades[nFacades][0] = 3;
+	facades[nFacades][1] = (parallels-3)*(meridians-1)+(meridians-1);
+	facades[nFacades][2] = (parallels-3)*(meridians-1)+1;
+	facades[nFacades][3] = (parallels-2)*(meridians-1)+1;
+	nFacades++;
+
+	superquadric->facades = facades;
+}
+
+SUPERQUADRIC create_superquadrics(float a, float b, float c, float e1, float e2, 
+								  int parallels, int meridians,
+								  float phi[], float theta[]){
+	SUPERQUADRIC superquadric;
+	PARAMETERS parameters;
+
+	parameters.a1 = a;
+	parameters.a2 = b;
+	parameters.a3 = c;
+	parameters.e1 = e1;
+	parameters.e2 = e2;
+	
+	superquadric.parallels = parallels;
+	superquadric.meridians = meridians;
+	superquadric.parameters = parameters;
+	superquadric.size_summits = (parallels - 2) * (meridians - 1) + 2;
+	superquadric.size_facades = (parallels - 1) * (meridians - 1);
+
+	facade_building(&superquadric);
+	summit_building(&superquadric, phi, theta);
+
+	return superquadric;
+}
+
+void destroy_superquadrics(SUPERQUADRIC* superquadric){
+	if(superquadric->summits)
+		freeSUMMITTable(superquadric->summits);
+	if(superquadric->facades)
+		freeIntMatrix(superquadric->facades, superquadric->size_facades);
 }
