@@ -46,6 +46,14 @@ SUMMIT create_SUMMIT(PARAMETERS parameters, float phi, float theta){
 	return func_eval(a, b, c, e1, e2, phi, theta);
 }
 
+float SUMMIT_distance(SUMMIT sum1, SUMMIT sum2){
+	float pow_x = pow((sum2.x - sum1.x), 2);
+	float pow_y = pow((sum2.y - sum1.y), 2);
+	float pow_z = pow((sum2.z - sum1.z), 2);
+
+	return sqrt(pow_x + pow_y + pow_z);
+}
+
 void summit_building(SUPERQUADRIC* superquadric, float phi[], float theta[]){
 	int lengthSummit = superquadric->size_summits;
 	int parallels = superquadric->parallels; 

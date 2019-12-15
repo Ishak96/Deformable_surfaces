@@ -49,7 +49,7 @@ CLOUD get_cloud_point(const char* file_name, float fact){
 	float** points = allocFloatMatrix(cloud.size, COLUMNS);
 
 	int i = 0;
-	while(i <= cloud.size){
+	while(i < cloud.size){
 		fscanf(file, "%f %f %f\n", &x, &y, &z);
 		
 		points[i][0] = x * fact;
@@ -190,22 +190,39 @@ void calculate_matrix_of_initial_moments(CLOUD cloud, PARAMETERS parameters, flo
 
 void get_size_parameters(CLOUD cloud, PARAMETERS* parameters){
 	 float max_x, max_y, max_z = -1000000000.0f;
+	 SUMMIT sum_x,sum_y,sum_z,sum_center;
+
+	 sum_center.x = parameters->tx;
+	 sum_center.y = parameters->ty;
+	 sum_center.z = parameters->tz;
 
 	 for(int i = 0; i < cloud.size; i++){
 	 	if(cloud.points[i][0] > max_x){
 	 		max_x = cloud.points[i][0];
+
+	 		sum_x.x = max_x;
+	 		sum_x.y = cloud.points[i][1];
+	 		sum_x.z = cloud.points[i][2];
 	 	}
 	 	if(cloud.points[i][1] > max_y){
 	 		max_y = cloud.points[i][1];
+
+	 		sum_y.x = cloud.points[i][0];
+	 		sum_y.y = max_y;
+	 		sum_y.z = cloud.points[i][2];
 	 	}
 	 	if(cloud.points[i][2] > max_z){
 	 		max_z = cloud.points[i][2];
+
+	 		sum_z.x = cloud.points[i][0];
+	 		sum_z.y = cloud.points[i][1];
+	 		sum_z.z = max_z;
 	 	}
 	 }
 
-	 parameters->a1 = sqrt(pow(max_x, 2) + pow(parameters->tx, 2));
-	 parameters->a2 = sqrt(pow(max_y, 2) + pow(parameters->ty, 2));
-	 parameters->a3 = sqrt(pow(max_z, 2) + pow(parameters->tz, 2));
+	 parameters->a1 = SUMMIT_distance(sum_center, sum_x);
+	 parameters->a2 = SUMMIT_distance(sum_center, sum_y);
+	 parameters->a3 = SUMMIT_distance(sum_center, sum_z);
 }
 
 void get_rotate_angle(float R[3][3], PARAMETERS* parameters){

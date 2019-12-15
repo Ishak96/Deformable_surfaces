@@ -44,6 +44,8 @@ SUMMIT func_eval(float a, float b, float c, float e1, float e2,
 
 SUMMIT create_SUMMIT(PARAMETERS parameters, float phi, float theta);
 
+float SUMMIT_distance(SUMMIT sum1, SUMMIT sum2);
+
 void summit_building(SUPERQUADRIC* superquadric, float phi[], float theta[]);
 
 void facade_building(SUPERQUADRIC* superquadric);

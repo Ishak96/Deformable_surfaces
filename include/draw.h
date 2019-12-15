@@ -15,7 +15,7 @@
 #define R_C 1
 #define G_C 1
 #define B_C 1
-#define POINTS_SIZE 4
+#define POINTS_SIZE 1
 
 void draw_SUPERQUADRIC(SUPERQUADRIC superquadric);
 
