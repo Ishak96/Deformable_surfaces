@@ -106,5 +106,8 @@ int main(int argc, char** argv){
 	glutKeyboardFunc(camera_keyboard);
 
 	glutMainLoop();
+
+	freeCLOUD(&cloud);
+	destroy_superquadrics(&superquadric);
 	return 0;
 }

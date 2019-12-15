@@ -91,5 +91,7 @@ int main(int argc, char** argv){
 	glutKeyboardFunc(camera_keyboard);
 
 	glutMainLoop();
+
+	destroy_superquadrics(&superquadric);
 	return 0;
 }

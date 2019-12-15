@@ -33,4 +33,6 @@ void get_rotate_angle(float R[3][3], PARAMETERS* parameters);
 
 PARAMETERS initial_parameters(CLOUD cloud);
 
+void freeCLOUD(CLOUD* cloud);
+
 #endif

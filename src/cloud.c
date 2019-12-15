@@ -250,3 +250,10 @@ PARAMETERS initial_parameters(CLOUD cloud){
 
  	return parameters;
  }
+
+ void freeCLOUD(CLOUD* cloud){
+ 	if(cloud->points){
+ 		freeFloatMatrix(cloud->points, cloud->size);
+ 		cloud->size = 0;
+ 	}
+ }
