@@ -4,19 +4,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <jacobi_eigenvalue.h>
+#include <util.h>
 #include <superquadrics.h>
 
 #define COLUMNS 3
 
+typedef struct{
+	int size;
+	float** points;
+}CLOUD;
+
 int get_size_cloud(const char* file_name);
-float** get_cloud_point(const char* file_name, int* size, float fact);
-float** generate_cloud_point(unsigned int uiStacks, unsigned int uiSlices, float fA, float fB, 
-							float fC, float e1, float e2, int* size, int xo, int yo, int zo, float r0, float r1);
-void igenvalues(float M[3][3], float R[3][3], float* lambda1, float* lambda2, float* lambda3);
-int calculate_matrix_of_rotation(float M[3][3], float R[3][3], float* lambda1, float* lambda2, float* lambda3);
-int calculate_matrix_of_initial_moments(float** cloud, int size, float tx, float ty, float tz, float matrix[3][3]);
-float* get_size_parameters(float** cloud, int size, float tx, float ty, float tz);
-float* get_rotate_angle(float R[3][3]);
-float* initial_parameters(float** cloud, int size);
+
+CLOUD get_cloud_point(const char* file_name, float fact);
+
+CLOUD generate_cloud_point(float a, float b, float c, float e1, float e2);
+
+void center_of_gravity(CLOUD cloud, PARAMETERS* parameters);
+
+void calculate_matrix_of_rotation(float M[3][3], float R[3][3], float* lambda1, float* lambda2, float* lambda3);
+
+void calculate_matrix_of_initial_moments(CLOUD cloud, PARAMETERS parameters, float matrix[3][3]);
+
+void get_size_parameters(CLOUD cloud, PARAMETERS* parameters);
+
+void get_rotate_angle(float R[3][3], PARAMETERS* parameters);
+
+PARAMETERS initial_parameters(CLOUD cloud);
 
 #endif

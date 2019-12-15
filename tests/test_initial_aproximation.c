@@ -1,51 +1,17 @@
 #include <draw.h>
 #include <camera.h>
 #include <util.h>
-#include <deformation.h>
+#include <cloud.h>
 #include <stdio.h>
 
 extern float xrot, yrot;
 extern float zoom_x, zoom_y;
+extern int aff; 
 
 //global variables
+CLOUD cloud;
 SUPERQUADRIC superquadric;
-
-extern float kx, ky, k, alpha, n;
-extern int deformation_control;
-
-void type_DEFORMATION(){
-	switch (deformation_control){
-		//taper deformation
-		case 1:
-			superquadric.parameters.kx = kx;
-			superquadric.parameters.ky = ky;
-			taper_SUPERQUADRIC(superquadric);
-			break;
-		
-		//twist deformation
-		case 2:
-			superquadric.parameters.nt = n;
-			twist_SUPERQUADRIC(superquadric);
-			break;
-		
-		//bend deformation
-		case 3:
-			superquadric.parameters.alpha = alpha;
-			superquadric.parameters.k = k;
-			bend_SUPERQUADRIC(superquadric);
-			break;
-		
-		//the reverse of tapering
-		case -1:
-			reverse_taper_SUPERQUADRIC(superquadric);
-			break;
-		//the reverse of bending
-		case -3:
-			reverse_bend_SUPERQUADRIC(superquadric);
-			break;
-	}
-	deformation_control = 0;
-}
+PARAMETERS parameters;
 
 void init(void){
 	glClearColor(0, 0, 0, 0);
@@ -81,8 +47,18 @@ void display(void){
 	glRotatef(yrot, 0.0f, 1.0f, 0.0f);
 
 	glPushMatrix();
-		type_DEFORMATION();
+		
+		if(aff == 1) {
+			draw_cloud(cloud, 1, 0, 0);
+		}
+		
+		glTranslatef(parameters.tx, parameters.ty, parameters.tz);
+		glRotatef(parameters.angle1, 1.0f, 0.0f, 0.0f);
+		glRotatef(parameters.angle2, 0.0f, 1.0f, 0.0f);
+		glRotatef(parameters.angle3, 0.0f, 0.0f, 1.0f);
+		
 		draw_SUPERQUADRIC(superquadric);
+	
 	glPopMatrix();
 	
 	glFlush();
@@ -91,26 +67,26 @@ void display(void){
 
 int main(int argc, char** argv){
 
-	if(argc < 6){
-		fprintf(stderr, "main: invalid argument!\n");
-		printf("usage: %s [a] [b] [c] [e1] [e2]\n", argv[0]);
-		return -1;
-	}
+	float a = 14;
+	float b = 10;
+	float c = 8;
+	float e1 = 1;
+	float e2 = 1.5;
+
+	cloud = generate_cloud_point(a, b, c,
+								 e1, e2);
+
+	parameters =  initial_parameters(cloud);
 
 	int parallels = 15;
 	int meridians = 15;
 
-	float a = atof(argv[1]);
-	float b = atof(argv[2]);
-	float c = atof(argv[3]);
-	float e1 = atof(argv[4]);
-	float e2 = atof(argv[5]);
-
 	float phi[2];
 	float theta[2];
-	default_PHIvect_THETAvect(phi, theta);	
+	default_PHIvect_THETAvect(phi, theta);
 
-	superquadric = create_superquadrics(a, b, c, e1, e2,
+	superquadric = create_superquadrics(parameters.a1, parameters.a2, parameters.a3,
+										parameters.e1, parameters.e2,
 								  		parallels, meridians,
 								  		phi, theta);
 

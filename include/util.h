@@ -5,7 +5,9 @@
 #include <superquadrics.h>
 
 int** allocIntMatrix(int rows, int cols);
+float** allocFloatMatrix(int rows, int cols);
 void freeIntMatrix(int** MAT, int rows);
+void freeFloatMatrix(float** MAT, int rows);
 SUMMIT* allocSUMMITTable(int n);
 void freeSUMMITTable(SUMMIT* summits);
 float* allocFloatTable(int n);

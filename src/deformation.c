@@ -28,7 +28,7 @@ SUMMIT bend(SUMMIT sum, float k, float alpha){
 
 		gama = sum.z * ro;
 
-		float r = cos(alpha - beta) * sqrt(pow(sum.x, 2) + pow(sum.y, 2));
+		float r = cos(alpha - beta) * sqrt(sum.x*sum.x + sum.y*sum.y);
 		float R = ro - cos(gama) * (ro - r);
 
 		sum_result.x = sum.x + cos(alpha) * (R - r);

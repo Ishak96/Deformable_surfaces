@@ -10,7 +10,7 @@ void draw_SUPERQUADRIC(SUPERQUADRIC superquadric){
 	for(int i = 0; i < superquadric.size_facades; i++){
 		int summit_size = superquadric.facades[i][0];
 		if(summit_size == 3){
-			glBegin(GL_TRIANGLE_STRIP);
+			glBegin(GL_TRIANGLES);
 				glVertex3f(sum[fac[i][1]].x,sum[fac[i][1]].y,sum[fac[i][1]].z);
 				glVertex3f(sum[fac[i][2]].x,sum[fac[i][2]].y,sum[fac[i][2]].z);
 				glVertex3f(sum[fac[i][3]].x,sum[fac[i][3]].y,sum[fac[i][3]].z);				
@@ -75,20 +75,15 @@ void DrawEllipsoid_cloud(unsigned int uiStacks, unsigned int uiSlices, float fA,
 	glEnd();
 }
 
-void draw_cloud_point(float** cloud, int size, float* color){
+void draw_cloud(CLOUD cloud, float R, float G, float B){
 
-	if( cloud == NULL || color == NULL ){
-		fprintf(stderr, "draw_cloud_point: invalid argument!\n");
-	}
-
-	glColor3f(color[0], color[1], color[2]);	
+	glColor3f(R, G, B);	
 	glPointSize(POINTS_SIZE);
 	glBegin(GL_POINTS);
 	
-	for(int i = 0; i <= size; i++){
-		glVertex3f(cloud[i][0], cloud[i][1], cloud[i][2]);
+	for(int i = 0; i < cloud.size; i++){
+		glVertex3f(cloud.points[i][0], cloud.points[i][1], cloud.points[i][2]);
 	}
-	
 	glEnd();
 }
 

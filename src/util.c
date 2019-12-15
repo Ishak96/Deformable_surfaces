@@ -10,7 +10,25 @@ int** allocIntMatrix(int rows, int cols){
 	return MAT;
 }
 
+float** allocFloatMatrix(int rows, int cols){
+	
+	float** MAT = (float **)malloc(rows * sizeof(float *));
+
+	for(int i = 0; i < rows; i++)
+		MAT[i] = (float *)malloc(cols * sizeof(float));
+
+	return MAT;
+}
+
 void freeIntMatrix(int** MAT, int rows){
+	if(MAT){
+		for(int i = 0; i < rows; i++)
+			free(MAT[i]);
+		free(MAT);
+	}
+}
+
+void freeFloatMatrix(float** MAT, int rows){
 	if(MAT){
 		for(int i = 0; i < rows; i++)
 			free(MAT[i]);

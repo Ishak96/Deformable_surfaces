@@ -58,8 +58,8 @@ int main(int argc, char** argv){
 		return -1;
 	}
 
-	int parallels = 20;
-	int meridians = 20;
+	int parallels = 15;
+	int meridians = 15;
 
 	float a = atof(argv[1]);
 	float b = atof(argv[2]);
