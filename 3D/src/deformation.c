@@ -17,7 +17,7 @@ SUMMIT bend(SUMMIT sum, float k, float alpha){
 	float beta;
 	float ro;
 	float gama;
-	SUMMIT sum_result = sum;
+	SUMMIT sum_result;
 	if(fabs(k) > DELTA){
 		ro = 1. / k;
 
@@ -26,7 +26,7 @@ SUMMIT bend(SUMMIT sum, float k, float alpha){
 		else
 			beta = atan2(sum.y, sum.x);
 
-		gama = sum.z * ro;
+		gama = sum.z * k;
 
 		float r = cos(alpha - beta) * sqrt(sum.x*sum.x + sum.y*sum.y);
 		float R = ro - cos(gama) * (ro - r);
@@ -40,13 +40,13 @@ SUMMIT bend(SUMMIT sum, float k, float alpha){
 }
 
 SUMMIT twist(SUMMIT sum, float nt, float a1){
-	float theta = nt*(PI+(sum.x/a1)*PI);
+	float theta = nt * (PI + (sum.x / a1) * PI);
 
 	SUMMIT sum_result;
 
 	sum_result.x = sum.x;
-	sum_result.y = sum.y*cos(theta)-sum.z*sin(theta);
-	sum_result.z = sum.y*sin(theta)+sum.z*cos(theta);
+	sum_result.y = sum.y * cos(theta) - sum.z * sin(theta);
+	sum_result.z = sum.y * sin(theta) + sum.z * cos(theta);
 
 	return sum_result;
 }
@@ -78,7 +78,7 @@ int bend_SUPERQUADRIC(SUPERQUADRIC superquadric){
 	int size_summits = superquadric.size_summits;
 	float k = superquadric.parameters.k;
 	float alpha = superquadric.parameters.alpha;
-
+	
 	for(int i = 0; i < size_summits; i++)
 		superquadric.summits[i] = bend(superquadric.summits[i], k, alpha);
  	
