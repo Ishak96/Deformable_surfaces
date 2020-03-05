@@ -4,7 +4,6 @@
 #include<gsl/gsl_min.h>
 #include<gsl/gsl_math.h>
 #include<gsl/gsl_errno.h>
-
-double fn1 (double x, void * params);
+#include <gsl/gsl_multimin.h>
 
 #endif

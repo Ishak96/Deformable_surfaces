@@ -1,6 +1,11 @@
 #include <minimization.h>
 #include <stdio.h>
 
+double fn1 (double x, void * params) {
+	(void)(params); /* avoid unused parameter warning */
+	return cos(x) + 1.0;
+}
+
 int main (void) {
 	int status;
 	int iter = 0, max_iter = 100;
