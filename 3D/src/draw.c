@@ -78,7 +78,7 @@ void DrawEllipsoid_cloud(unsigned int uiStacks, unsigned int uiSlices, float fA,
 void draw_cloud(CLOUD cloud, float R, float G, float B){
 
 	glColor3f(R, G, B);	
-	glPointSize(POINTS_SIZE);
+	glPointSize(4);
 	glBegin(GL_POINTS);
 	
 	for(int i = 0; i < cloud.size; i++){
