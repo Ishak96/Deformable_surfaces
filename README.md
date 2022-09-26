@@ -1,9 +1,8 @@
-# Surfaces déformables Globalement (Super-Quadriques)
+# Segmentation and 3D modeling by a set of superellipsoids.
 
 ## université de cergy pontoise
 ## Laboratoire : ETIS
 ### Étudiant : AYAD Ishak
-### Tuteur du projet : Brahim DERDOURI
 
 Projet de laboratoire M1 IISC
 
